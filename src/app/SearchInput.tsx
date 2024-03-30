@@ -3,7 +3,7 @@ import React, { useState, FormEvent } from "react";
 import { Input, Button, Spinner } from "@nextui-org/react";
 
 // Types
-import { Transaction } from "@/types";
+import { Transaction, NFTData } from "@/types";
 
 // Actions
 import { fetchAddressInfo } from "@/actions";
@@ -13,6 +13,7 @@ interface Props {
   setLoading(l: boolean): void;
   setWalletBalance(b: string | null): void;
   setWalletTransactions(t: Transaction[]): void;
+  setWalletNfts(n: NFTData[]): void;
 }
 
 function SearchInput({
@@ -20,6 +21,7 @@ function SearchInput({
   setLoading,
   setWalletBalance,
   setWalletTransactions,
+  setWalletNfts,
 }: Props) {
   const [walletAddress, setWalletAddress] = useState<string>("");
 
@@ -32,6 +34,7 @@ function SearchInput({
       console.log("fetched wallet info", walletInfo);
       setWalletBalance(walletInfo.balance);
       setWalletTransactions(walletInfo.transactions);
+      setWalletNfts(walletInfo.nfts);
     }
   };
 

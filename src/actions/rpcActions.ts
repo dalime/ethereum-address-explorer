@@ -1,6 +1,11 @@
 // Global imports
-import { WalletInfo } from '@/types';
 import Web3 from 'web3';
+
+// Types
+import { NFTData, NFTMetadata, WalletInfo } from '@/types';
+
+// Utils
+import { parseNFTMetadata } from '@/utils';
 
 // Instantiate infura info used by all of these functions
 const infuraProjectId = process.env.NEXT_PUBLIC_INFURA_API_KEY;
@@ -71,6 +76,30 @@ const fetchWalletTransactions = async (walletAddress: string) => {
 }
 
 /**
+ * Fetches NFTs owned by a wallet address
+ * @param walletAddress string
+ * @returns NFTData[]
+ */
+const fetchNFTsForWallet = async (walletAddress: string) => {
+  const url = `https://deep-index.moralis.io/api/v2.2/${walletAddress}/nft?chain=eth&format=decimal&media_items=false`; // Your Moralis server URL
+
+  try {
+    const response = await fetch(url, { method: 'GET', headers: {
+      "Accept": 'application/json',
+      'X-API-Key': process.env.NEXT_PUBLIC_MORALIS_API_KEY || "",
+    } });
+    const data = await response.json();
+    const results = data.result as NFTData[];
+    const finalResults = results.map((result) => ({ ...result, metadata: result.metadata ? typeof result.metadata === "string" ? parseNFTMetadata(result.metadata) : result.metadata as NFTMetadata : null }));
+    console.log('NFTS Owned:', finalResults);
+    return finalResults || [];
+  } catch (error) {
+    console.error("Failed to fetch NFTs:", error);
+    return [];
+  }
+};
+
+/**
  * Fetches blockchain info about an Ethereum wallet address using infura
  * @param walletAddress string
  * @returns WalletInfo
@@ -79,10 +108,12 @@ const fetchAddressInfo = async (walletAddress: string) => {
   try {
     const walletBalance = await fetchWalletBalance(walletAddress);
     const walletTransactions = await fetchWalletTransactions(walletAddress);
+    const walletNFTs = await fetchNFTsForWallet(walletAddress);
 
     const returnObj: WalletInfo = {
       balance: walletBalance,
       transactions: walletTransactions,
+      nfts: walletNFTs,
     }
 
     return returnObj;

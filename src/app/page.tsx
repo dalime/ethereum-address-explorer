@@ -5,12 +5,13 @@ import { useState } from "react";
 import { NextUIProvider, Spinner } from "@nextui-org/react";
 
 // Types
-import { Transaction } from "@/types";
+import { NFTData, Transaction } from "@/types";
 
 // Components
 import SearchInput from "./SearchInput";
 import Info from "./info";
 import TransactionsTable from "./TransactionsTable";
+import NFTs from "./NFTs";
 
 export default function Home() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -18,6 +19,7 @@ export default function Home() {
   const [walletTransactions, setWalletTransactions] = useState<Transaction[]>(
     []
   );
+  const [walletNfts, setWalletNfts] = useState<NFTData[]>([]);
 
   return (
     <NextUIProvider>
@@ -33,6 +35,7 @@ export default function Home() {
           setLoading={setLoading}
           setWalletBalance={setWalletBalance}
           setWalletTransactions={setWalletTransactions}
+          setWalletNfts={setWalletNfts}
         />
 
         {loading ? (
@@ -45,6 +48,7 @@ export default function Home() {
             ) : (
               <></>
             )}
+            {walletNfts.length ? <NFTs nftList={walletNfts} /> : <></>}
           </>
         )}
       </main>
