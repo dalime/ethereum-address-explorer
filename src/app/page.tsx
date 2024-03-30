@@ -1,35 +1,23 @@
 "use client";
 
 // Global imports
-import { useState, FormEvent } from "react";
-import { NextUIProvider } from "@nextui-org/react";
+import { useState } from "react";
+import { NextUIProvider, Spinner } from "@nextui-org/react";
 
 // Types
 import { Transaction } from "@/types";
 
-// Actions
-import { fetchAddressInfo } from "@/actions";
-
 // Components
+import SearchInput from "./SearchInput";
 import Info from "./info";
 import TransactionsTable from "./TransactionsTable";
 
 export default function Home() {
-  const [walletAddress, setWalletAddress] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const [walletBalance, setWalletBalance] = useState<string | null>(null);
   const [walletTransactions, setWalletTransactions] = useState<Transaction[]>(
     []
   );
-
-  const submitForm = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const walletInfo = await fetchAddressInfo(walletAddress);
-    if (walletInfo) {
-      console.log("fetched wallet info", walletInfo);
-      setWalletBalance(walletInfo.balance);
-      setWalletTransactions(walletInfo.transactions);
-    }
-  };
 
   return (
     <NextUIProvider>
@@ -40,36 +28,24 @@ export default function Home() {
           </h2>
         </div>
 
-        <form
-          className="flex flex-col gap-4 bg-gray-800 rounded-lg shadow-lg w-full"
-          onSubmit={submitForm}
-        >
-          <div className="py-2">
-            <label htmlFor="walletAddress" className="text-gray-400 block">
-              Wallet Address
-            </label>
-            <input
-              type="text"
-              id="walletAddress"
-              name="walletAddress"
-              className="bg-gray-700 text-white rounded-lg p-2 w-full"
-              placeholder="0x..."
-              value={walletAddress}
-              onChange={(e) => setWalletAddress(e.target.value)}
-            />
-          </div>
+        <SearchInput
+          loading={loading}
+          setLoading={setLoading}
+          setWalletBalance={setWalletBalance}
+          setWalletTransactions={setWalletTransactions}
+        />
 
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition duration-200"
-          >
-            Explore
-          </button>
-        </form>
-
-        {walletBalance && <Info walletBalance={walletBalance} />}
-        {walletTransactions.length && (
-          <TransactionsTable transactions={walletTransactions} />
+        {loading ? (
+          <Spinner />
+        ) : (
+          <>
+            {walletBalance && <Info walletBalance={walletBalance} />}
+            {walletTransactions.length ? (
+              <TransactionsTable transactions={walletTransactions} />
+            ) : (
+              <></>
+            )}
+          </>
         )}
       </main>
     </NextUIProvider>
