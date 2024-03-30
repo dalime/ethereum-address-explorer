@@ -1,5 +1,5 @@
 // Global imports
-import React, { useState, FormEvent } from "react";
+import React, { useState, useMemo, FormEvent } from "react";
 import { Input, Button, Spinner } from "@nextui-org/react";
 
 // Types
@@ -17,6 +17,8 @@ interface Props {
   setWalletBalance(b: string | null): void;
   setWalletTransactions(t: Transaction[]): void;
   setWalletNfts(n: NFTData[]): void;
+  flat?: boolean;
+  mobile?: boolean;
 }
 
 function SearchInput({
@@ -25,9 +27,15 @@ function SearchInput({
   setWalletBalance,
   setWalletTransactions,
   setWalletNfts,
+  flat,
+  mobile,
 }: Props) {
   const [walletAddress, setWalletAddress] = useState<string>("");
 
+  /**
+   * Submits the form
+   * @param e FormEvent<HTMLFormElement>
+   */
   const submitForm = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
@@ -41,26 +49,47 @@ function SearchInput({
     }
   };
 
-  const isInvalid = React.useMemo(() => {
+  /**
+   * Checks if walletAddress is valid ETH address using utils
+   */
+  const isInvalid = useMemo(() => {
     if (walletAddress === "") return false;
 
     return isValidEthAddress(walletAddress) ? false : true;
   }, [walletAddress]);
 
+  /**
+   * Renders submit button
+   * @returns JSX.Element
+   */
+  const renderSubmitBtn = (): JSX.Element => (
+    <Button
+      type="submit"
+      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition duration-200"
+      disabled={loading}
+      style={flat ? { marginLeft: 10 } : {}}
+    >
+      {loading ? <Spinner /> : "Explore"}
+    </Button>
+  );
+
   return (
     <form
-      className="flex flex-col gap-4 bg-gray-800 rounded-lg shadow-lg w-full"
+      className={`flex flex-${
+        flat ? "row" : "col"
+      } gap-4rounded-lg shadow-lg w-full`}
       onSubmit={submitForm}
     >
-      <div className="py-2">
-        <label htmlFor="walletAddress" className="text-gray-400 block">
-          Wallet Address
-        </label>
+      <div className={`py-2 ${flat ? "flex justify-center align-center" : ""}`}>
+        {!flat && (
+          <label htmlFor="walletAddress" className="text-gray-400 block">
+            Wallet Address
+          </label>
+        )}
         <Input
           type="text"
           id="walletAddress"
           name="walletAddress"
-          // className="bg-gray-700 text-white rounded-lg p-2 w-full"
           variant="bordered"
           isInvalid={isInvalid}
           color={isInvalid ? "danger" : "success"}
@@ -70,15 +99,11 @@ function SearchInput({
           onChange={(e) => setWalletAddress(e.target.value)}
           disabled={loading}
         />
+
+        {flat && renderSubmitBtn()}
       </div>
 
-      <Button
-        type="submit"
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition duration-200"
-        disabled={loading}
-      >
-        {loading ? <Spinner /> : "Explore"}
-      </Button>
+      {!flat && renderSubmitBtn()}
     </form>
   );
 }
