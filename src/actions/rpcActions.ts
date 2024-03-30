@@ -3,7 +3,7 @@ import Web3 from 'web3';
 /**
  * Fetches blockchain info about an Ethereum wallet address using infura
  * @param walletAddress string
- * @returns Response | null
+ * @returns string | null
  */
 const fetchAddressInfo = async (walletAddress: string) => {
   const infuraProjectId = process.env.NEXT_PUBLIC_INFURA_API_KEY;
