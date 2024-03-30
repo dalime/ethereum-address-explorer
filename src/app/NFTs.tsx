@@ -14,32 +14,42 @@ interface Props {
 
 function NFTs({ nftList }: Props) {
   return (
-    <div>
-      {nftList.map((nft, index) => {
-        const { name, metadata } = nft;
-        console.log("nft metadata", metadata, ", typeof", typeof metadata);
-        let nftMetadata: NFTMetadata | null = null;
-        if (typeof metadata === "string") {
-          nftMetadata = parseNFTMetadata(metadata);
-        } else {
-          nftMetadata = metadata as NFTMetadata;
-        }
-        console.log("metadata", nftMetadata);
-        return (
-          <Card key={`nft-${index}`}>
-            <p>{name}</p>
-            {nftMetadata ? (
-              <Image
-                src={nftMetadata.image}
-                alt={`Preview of ${nftMetadata.name}`}
-                width={100}
-              />
-            ) : (
-              <></>
-            )}
-          </Card>
-        );
-      })}
+    <div className="container mx-auto px-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-8 gap-4">
+        {nftList.map((nft, index) => {
+          const { name, metadata } = nft;
+          console.log("nft metadata", metadata, ", typeof", typeof metadata);
+          let nftMetadata: NFTMetadata | null = null;
+          if (typeof metadata === "string") {
+            nftMetadata = parseNFTMetadata(metadata);
+          } else {
+            nftMetadata = metadata as NFTMetadata;
+          }
+          console.log("metadata", nftMetadata);
+          return (
+            <Card key={`nft-${index}`}>
+              <h3>{name}</h3>
+              {nftMetadata ? (
+                <>
+                  <Image
+                    src={nftMetadata.image}
+                    alt={`Preview of ${nftMetadata.name}`}
+                    width={100}
+                  />
+                  {nftMetadata.fiatPrice && (
+                    <p>Fiat Price: {nftMetadata.fiatPrice}</p>
+                  )}
+                  {nftMetadata.ethPrice && (
+                    <p>ETH Price: {nftMetadata.ethPrice} ETH</p>
+                  )}
+                </>
+              ) : (
+                <p>Metadata unavilable</p>
+              )}
+            </Card>
+          );
+        })}
+      </div>
     </div>
   );
 }
