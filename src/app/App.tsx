@@ -2,6 +2,7 @@
 import React, { useEffect } from "react";
 import { useRecoilState } from "recoil";
 import { Image } from "@nextui-org/react";
+import { useMediaQuery } from "react-responsive";
 
 // Recoiil
 import { ethPriceState, loadingState, walletInfoState } from "@/recoil/atoms";
@@ -24,6 +25,11 @@ function App() {
   const [walletInfo] = useRecoilState(walletInfoState);
   const [, setEthPrice] = useRecoilState(ethPriceState);
 
+  const isMobile = useMediaQuery({ maxWidth: 768 });
+  const isTablet = useMediaQuery({ maxWidth: 1000 });
+  const isDesktop = useMediaQuery({ maxWidth: 1200 });
+  const isLargeScreen = useMediaQuery({ minWidth: 1200 });
+
   useEffect(() => {
     const getAndSetEthPrice = async () => {
       const latestPrice: number | null = await fetchEthPrice();
@@ -36,7 +42,10 @@ function App() {
   return (
     <main
       className="flex min-h-screen flex-col items-center justify-center dark text-foreground bg-background"
-      style={{ paddingLeft: "2rem", paddingRight: "2rem" }}
+      style={{
+        paddingLeft: `${isMobile ? 2 : isTablet ? 3 : isDesktop ? 4 : 6}rem`,
+        paddingRight: `${isMobile ? 2 : isTablet ? 3 : isDesktop ? 4 : 6}rem`,
+      }}
     >
       {walletInfo ? <Navigation /> : <></>}
 
