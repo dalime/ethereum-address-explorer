@@ -1,7 +1,7 @@
 // Global imports
 import React, { useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { Image } from "@nextui-org/react";
+import { Image, Accordion, AccordionItem } from "@nextui-org/react";
 import { useMediaQuery } from "react-responsive";
 
 // Recoiil
@@ -70,17 +70,27 @@ function App() {
       {loading ? (
         <></>
       ) : walletInfo ? (
-        <>
-          {walletInfo.balance && (
-            <BalanceInfo walletBalance={walletInfo.balance} />
-          )}
-          {walletInfo.transactions.length ? (
-            <TransactionsTable transactions={walletInfo.transactions} />
-          ) : (
-            <></>
-          )}
-          {walletInfo.nfts.length ? <NFTs nftList={walletInfo.nfts} /> : <></>}
-        </>
+        <Accordion>
+          <AccordionItem key="1" aria-label="Accordion 1" title="Overview">
+            {walletInfo.balance && (
+              <BalanceInfo walletBalance={walletInfo.balance} />
+            )}
+          </AccordionItem>
+          <AccordionItem key="2" aria-label="Accordion 2" title="Transactions">
+            {walletInfo.transactions.length ? (
+              <TransactionsTable transactions={walletInfo.transactions} />
+            ) : (
+              <></>
+            )}
+          </AccordionItem>
+          <AccordionItem key="3" aria-label="Accordion 3" title="NFTs">
+            {walletInfo.nfts.length ? (
+              <NFTs nftList={walletInfo.nfts} />
+            ) : (
+              <></>
+            )}
+          </AccordionItem>
+        </Accordion>
       ) : (
         <></>
       )}
