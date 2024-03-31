@@ -130,15 +130,17 @@ const fetchEthPrice = async () => {
  */
 const fetchAddressInfo = async (walletAddress: string) => {
   try {
-    const walletBalance = await fetchWalletBalance(walletAddress);
-    const walletTransactions = await fetchWalletTransactions(walletAddress);
-    const walletNFTs = await fetchNFTsForWallet(walletAddress);
+    const [walletBalance, walletTransactions, walletNFTs] = await Promise.all([
+      fetchWalletBalance(walletAddress),
+      fetchWalletTransactions(walletAddress),
+      fetchNFTsForWallet(walletAddress),
+    ]);
 
     const returnObj: WalletInfo = {
       balance: walletBalance,
       transactions: walletTransactions,
       nfts: walletNFTs,
-    }
+    };
 
     return returnObj;
   } catch (error) {
