@@ -1,5 +1,5 @@
-import React from "react";
-import { useRecoilState } from "recoil";
+import React, { useRef } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { Card, Image } from "@nextui-org/react";
 
 // Recoil
@@ -17,7 +17,8 @@ interface Props {
 
 function BalanceInfo({ walletBalance }: Props): JSX.Element {
   const [ethPrice] = useRecoilState(ethPriceState);
-  const [walletAddress] = useRecoilState(walletAddressState);
+  const walletAddressInitial = useRecoilValue(walletAddressState); // Capture the initial state
+  const walletAddressRef = useRef(walletAddressInitial); // Use useRef to hold the initial value
 
   const walletBalanceInt = parseInt(walletBalance, 10);
   const roundedBalance = Math.round(walletBalanceInt * 100) / 100;
@@ -41,7 +42,9 @@ function BalanceInfo({ walletBalance }: Props): JSX.Element {
           <span className="text-gray-400 text-sm">ETH ADDRESS</span>
         </div>
         <br />
-        <span className="text-white text-md font-bold">{walletAddress}</span>
+        <span className="text-white text-md font-bold">
+          {walletAddressRef.current}
+        </span>
       </div>
       <div className="mt-3">
         <span className="text-gray-400 text-sm">ETH BALANCE</span>
