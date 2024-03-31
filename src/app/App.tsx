@@ -1,6 +1,7 @@
 // Global imports
 import React, { useEffect } from "react";
 import { useRecoilState } from "recoil";
+import { Image } from "@nextui-org/react";
 
 // Recoiil
 import { ethPriceState, loadingState, walletInfoState } from "@/recoil/atoms";
@@ -11,9 +12,12 @@ import { fetchEthPrice } from "@/actions";
 // Components
 import Navigation from "./Navigation";
 import SearchInput from "./SearchInput";
-import Info from "./info";
+import BalanceInfo from "./BalanceInfo";
 import TransactionsTable from "./TransactionsTable";
 import NFTs from "./NFTs";
+
+// Images
+import EthLogo from "../../public/eth-logo.png";
 
 function App() {
   const [loading] = useRecoilState(loadingState);
@@ -29,30 +33,44 @@ function App() {
     getAndSetEthPrice();
   }, [setEthPrice]);
 
-  const { balance, nfts, transactions } = walletInfo;
-
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24 dark text-foreground bg-background">
-      <Navigation />
-      <>
-        <h2 className={`text-white mb-3 text-2xl font-semibold`}>
-          Ethereum Address Explorer
-        </h2>
+    <main
+      className="flex min-h-screen flex-col items-center justify-center dark text-foreground bg-background"
+      style={{ paddingLeft: "2rem", paddingRight: "2rem" }}
+    >
+      {walletInfo ? <Navigation /> : <></>}
 
-        <SearchInput />
-      </>
+      {walletInfo ? (
+        <></>
+      ) : (
+        <>
+          <Image
+            src={EthLogo.src}
+            alt="Ethereum"
+            width={80}
+            style={{ width: 80, height: "auto", marginBottom: 20 }}
+          />
+          <h1 className={`text-white mb-3 text-2xl font-semibold`}>
+            Ethereum Address Explorer
+          </h1>
+
+          <SearchInput />
+        </>
+      )}
 
       {loading ? (
         <></>
-      ) : balance || transactions || nfts ? (
+      ) : walletInfo ? (
         <>
-          {balance && <Info walletBalance={balance} />}
-          {transactions.length ? (
-            <TransactionsTable transactions={transactions} />
+          {walletInfo.balance && (
+            <BalanceInfo walletBalance={walletInfo.balance} />
+          )}
+          {walletInfo.transactions.length ? (
+            <TransactionsTable transactions={walletInfo.transactions} />
           ) : (
             <></>
           )}
-          {nfts.length ? <NFTs nftList={nfts} /> : <></>}
+          {walletInfo.nfts.length ? <NFTs nftList={walletInfo.nfts} /> : <></>}
         </>
       ) : (
         <></>

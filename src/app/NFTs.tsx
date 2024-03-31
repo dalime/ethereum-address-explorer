@@ -14,7 +14,7 @@ interface Props {
 
 function NFTs({ nftList }: Props) {
   return (
-    <div className="container mx-auto px-4">
+    <div className="container mx-auto" style={{ marginTop: 20 }}>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-8 gap-4">
         {nftList.map((nft, index) => {
           const { name, metadata } = nft;
@@ -27,7 +27,10 @@ function NFTs({ nftList }: Props) {
           }
           console.log("metadata", nftMetadata);
           return (
-            <Card key={`nft-${index}`}>
+            <Card
+              key={`nft-${index}`}
+              style={{ width: "100%", padding: "1rem" }}
+            >
               <h3>{name}</h3>
               {nftMetadata ? (
                 <>

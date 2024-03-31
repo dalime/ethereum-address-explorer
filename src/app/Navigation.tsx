@@ -8,14 +8,20 @@ import {
   NavbarMenuToggle,
   NavbarMenu,
   NavbarMenuItem,
-  Link,
+  Image,
 } from "@nextui-org/react";
 
 // Recoil
 import { ethPriceState } from "@/recoil/atoms";
 
+// Utils
+import { formatUSD } from "@/utils";
+
 // Components
 import SearchInput from "./SearchInput";
+
+// Images
+import EthLogo from "../../public/eth-logo.png";
 
 export default function Navigation() {
   const [ethPrice] = useRecoilState(ethPriceState);
@@ -34,9 +40,19 @@ export default function Navigation() {
         />
         <NavbarBrand>
           {ethPrice && (
-            <p className="font-bold text-inherit">
-              ETH Price: {Math.round(ethPrice * 100) / 100} USD
-            </p>
+            <div className="flex items-center space-x-1">
+              {" "}
+              {/* Adjust space as needed */}
+              <Image
+                src={EthLogo.src}
+                alt="Ethereum"
+                width={30}
+                className="inline-block"
+              />
+              <span className="font-bold text-inherit">
+                ETH Price: {formatUSD(ethPrice)}
+              </span>
+            </div>
           )}
         </NavbarBrand>
       </NavbarContent>

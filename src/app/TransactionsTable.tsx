@@ -21,7 +21,7 @@ interface Props {
 
 function TransactionsTable({ transactions }: Props) {
   return (
-    <Table>
+    <Table style={{ marginBottom: 20 }}>
       <TableHeader>
         <TableColumn>Transaction Hash</TableColumn>
         <TableColumn>Block</TableColumn>

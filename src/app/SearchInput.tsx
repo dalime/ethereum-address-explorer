@@ -78,7 +78,7 @@ function SearchInput({ flat, mobile }: Props) {
       <div className={`py-2 ${flat ? "flex justify-center align-center" : ""}`}>
         {!flat && (
           <label htmlFor="walletAddress" className="text-gray-400 block">
-            Wallet Address
+            Enter Wallet Address
           </label>
         )}
         <Input
