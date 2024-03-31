@@ -44,7 +44,7 @@ function TransactionsTable({ transactions }: Props) {
           } = transaction;
 
           const { fromAddress, toAddress } = parseAddresses(topics);
-          const tokenAmount = parseTransactionValue(data);
+          const tokenAmount = parseTransactionValue(topics[3]);
           const gasFee = parseGasFee(gasUsed, gasPrice);
 
           const hashStr = `${transactionHash.substring(0, 13)}...`;
@@ -56,7 +56,9 @@ function TransactionsTable({ transactions }: Props) {
               <TableCell>{timeStamp}</TableCell>
               <TableCell>{fromAddress}</TableCell>
               <TableCell>{toAddress}</TableCell>
-              <TableCell>{tokenAmount.toString()}</TableCell>
+              <TableCell>
+                {tokenAmount ? tokenAmount.toString() : "Unknown"}
+              </TableCell>
               <TableCell>{gasFee.toString()} ETH</TableCell>
             </TableRow>
           );

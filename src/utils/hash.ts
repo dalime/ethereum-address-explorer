@@ -22,13 +22,17 @@ export const parseAddresses = (topics: string[]): { fromAddress: string; toAddre
 /**
  * Parses the amount of a transaction in ETH
  * @param data string
- * @returns number
+ * @returns number | null
  */
-export const parseTransactionValue = (data: string): number => {
-  const tokenDecimals = 18; // Common for many tokens like ETH, but check for each token
-  const valueDec = parseInt(data, 16);
-  const tokenAmount = valueDec / Math.pow(10, tokenDecimals);
-  return tokenAmount;
+export const parseTransactionValue = (data: string): number | null => {
+  if (data) {
+    const amountBigInt = BigInt(data);
+    const tokenDecimals = 18;
+    const amount = Number(amountBigInt) / 10 ** tokenDecimals;
+    return amount;
+  } else {
+    return null;
+  }
 };
 
 /**
