@@ -9,7 +9,7 @@ const defaultState: WalletInfo = {
   transactions: [],
 }
 
-export const walletInfoState = atom({
+export const walletInfoState = atom<WalletInfo>({
   key: 'walletInfoState',
   default: defaultState,
 });

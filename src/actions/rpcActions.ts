@@ -100,6 +100,30 @@ const fetchNFTsForWallet = async (walletAddress: string) => {
 };
 
 /**
+ * Fetches the latest price of ETH
+ * @returns number | null
+ */
+const fetchEthPrice = async () => {
+  const apiKey = process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY || "";
+  const url = `https://api.etherscan.io/api?module=stats&action=ethprice&apikey=${apiKey}`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    if(data.status === "1") {
+      console.log('Current ETH Price in USD:', data.result.ethusd);
+      return data.result.ethusd;
+    } else {
+      console.error('Failed to fetch ETH price:', data.message);
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching ETH price:', error);
+    return null;
+  }
+};
+
+/**
  * Fetches blockchain info about an Ethereum wallet address using infura
  * @param walletAddress string
  * @returns WalletInfo
@@ -125,4 +149,5 @@ const fetchAddressInfo = async (walletAddress: string) => {
 
 export {
   fetchAddressInfo,
+  fetchEthPrice,
 }

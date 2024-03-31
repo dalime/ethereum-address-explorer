@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useRecoilState } from "recoil";
 import {
   Navbar,
   NavbarBrand,
@@ -10,39 +11,18 @@ import {
   Link,
 } from "@nextui-org/react";
 
-// Types
-import { Transaction, NFTData } from "@/types";
+// Recoil
+import { ethPriceState } from "@/recoil/atoms";
 
 // Components
 import SearchInput from "./SearchInput";
 
-interface Props {
-  loading: boolean;
-  setLoading(l: boolean): void;
-  setWalletBalance(b: string | null): void;
-  setWalletTransactions(t: Transaction[]): void;
-  setWalletNfts(n: NFTData[]): void;
-}
-
-export default function Navigation({
-  loading,
-  setLoading,
-  setWalletBalance,
-  setWalletTransactions,
-  setWalletNfts,
-}: Props) {
+export default function Navigation() {
+  const [ethPrice] = useRecoilState(ethPriceState);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const renderSearchInput = (desktop: boolean): JSX.Element => (
-    <SearchInput
-      loading={loading}
-      setLoading={setLoading}
-      setWalletBalance={setWalletBalance}
-      setWalletTransactions={setWalletTransactions}
-      setWalletNfts={setWalletNfts}
-      flat={desktop}
-      mobile={!desktop}
-    />
+    <SearchInput flat={desktop} mobile={!desktop} />
   );
 
   return (
@@ -53,7 +33,11 @@ export default function Navigation({
           className="sm:hidden"
         />
         <NavbarBrand>
-          <p className="font-bold text-inherit">Ethereum Address Explorer</p>
+          {ethPrice && (
+            <p className="font-bold text-inherit">
+              ETH Price: {Math.round(ethPrice * 100) / 100} USD
+            </p>
+          )}
         </NavbarBrand>
       </NavbarContent>
 

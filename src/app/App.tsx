@@ -1,9 +1,12 @@
-import React from "react";
-
+// Global imports
+import React, { useEffect } from "react";
 import { useRecoilState } from "recoil";
 
 // Recoiil
-import { loadingState, walletInfoState } from "@/recoil/atoms";
+import { ethPriceState, loadingState, walletInfoState } from "@/recoil/atoms";
+
+// Actions
+import { fetchEthPrice } from "@/actions";
 
 // Components
 import Navigation from "./Navigation";
@@ -15,6 +18,16 @@ import NFTs from "./NFTs";
 function App() {
   const [loading] = useRecoilState(loadingState);
   const [walletInfo] = useRecoilState(walletInfoState);
+  const [, setEthPrice] = useRecoilState(ethPriceState);
+
+  useEffect(() => {
+    const getAndSetEthPrice = async () => {
+      const latestPrice: number | null = await fetchEthPrice();
+      if (latestPrice) setEthPrice(latestPrice);
+    };
+
+    getAndSetEthPrice();
+  }, [setEthPrice]);
 
   const { balance, nfts, transactions } = walletInfo;
 
