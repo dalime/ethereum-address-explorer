@@ -13,7 +13,12 @@ import {
 import { Transaction } from "@/types";
 
 // Utils
-import { parseAddresses, parseGasFee, parseTransactionValue } from "@/utils";
+import {
+  parseAddresses,
+  parseGasFee,
+  parseTransactionValue,
+  formatETH,
+} from "@/utils";
 
 interface Props {
   transactions: Transaction[];
@@ -59,7 +64,7 @@ function TransactionsTable({ transactions }: Props) {
               <TableCell>
                 {tokenAmount ? tokenAmount.toString() : "Unknown"}
               </TableCell>
-              <TableCell>{gasFee.toString()} ETH</TableCell>
+              <TableCell>{formatETH(gasFee)}</TableCell>
             </TableRow>
           );
         })}

@@ -27,7 +27,6 @@ function BalanceInfo({ walletBalance }: Props): JSX.Element {
   return (
     <Card className="w-full p-4 mb-5 rounded-lg">
       {" "}
-      {/* Assuming you want a dark card */}
       <h2 className="text-white mb-3 text-lg font-semibold">Overview</h2>
       <div>
         <div
@@ -35,7 +34,6 @@ function BalanceInfo({ walletBalance }: Props): JSX.Element {
           style={{ marginBottom: -20 }}
         >
           {" "}
-          {/* Adjust space as needed */}
           <Image
             src={EthLogo.src}
             alt="Ethereum"

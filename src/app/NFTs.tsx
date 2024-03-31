@@ -6,7 +6,7 @@ import { Card, Image } from "@nextui-org/react";
 import { NFTData, NFTMetadata } from "@/types";
 
 // Utils
-import { parseNFTMetadata } from "@/utils";
+import { parseNFTMetadata, formatETH } from "@/utils";
 
 interface Props {
   nftList: NFTData[];
@@ -15,6 +15,7 @@ interface Props {
 function NFTs({ nftList }: Props) {
   return (
     <div className="container mx-auto" style={{ marginTop: 20 }}>
+      <h2 className="text-white mb-3 text-lg font-semibold">NFTs</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-8 gap-4">
         {nftList.map((nft, index) => {
           const { name, metadata } = nft;
@@ -43,7 +44,9 @@ function NFTs({ nftList }: Props) {
                     <p>Fiat Price: {nftMetadata.fiatPrice}</p>
                   )}
                   {nftMetadata.ethPrice && (
-                    <p>ETH Price: {nftMetadata.ethPrice} ETH</p>
+                    <p>
+                      ETH Price: {formatETH(parseInt(nftMetadata.ethPrice, 10))}
+                    </p>
                   )}
                 </>
               ) : (
