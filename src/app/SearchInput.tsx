@@ -1,6 +1,14 @@
 // Global imports
-import React, { useState, useMemo, FormEvent } from "react";
+import React, { useMemo, FormEvent } from "react";
+import { useRecoilState } from "recoil";
 import { Input, Button, Spinner } from "@nextui-org/react";
+
+// Recoil
+import {
+  loadingState,
+  walletAddressState,
+  walletInfoState,
+} from "@/recoil/atoms";
 
 // Types
 import { Transaction, NFTData } from "@/types";
@@ -12,25 +20,14 @@ import { fetchAddressInfo } from "@/actions";
 import { isValidEthAddress } from "@/utils";
 
 interface Props {
-  loading: boolean;
-  setLoading(l: boolean): void;
-  setWalletBalance(b: string | null): void;
-  setWalletTransactions(t: Transaction[]): void;
-  setWalletNfts(n: NFTData[]): void;
   flat?: boolean;
   mobile?: boolean;
 }
 
-function SearchInput({
-  loading,
-  setLoading,
-  setWalletBalance,
-  setWalletTransactions,
-  setWalletNfts,
-  flat,
-  mobile,
-}: Props) {
-  const [walletAddress, setWalletAddress] = useState<string>("");
+function SearchInput({ flat, mobile }: Props) {
+  const [walletAddress, setWalletAddress] = useRecoilState(walletAddressState);
+  const [loading, setLoading] = useRecoilState(loadingState);
+  const [, setWalletInfo] = useRecoilState(walletInfoState);
 
   /**
    * Submits the form
@@ -43,9 +40,7 @@ function SearchInput({
     setLoading(false);
     if (walletInfo) {
       console.log("fetched wallet info", walletInfo);
-      setWalletBalance(walletInfo.balance);
-      setWalletTransactions(walletInfo.transactions);
-      setWalletNfts(walletInfo.nfts);
+      setWalletInfo(walletInfo);
     }
   };
 
