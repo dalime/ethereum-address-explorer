@@ -1,4 +1,7 @@
+"use client";
+
 // Global imports
+import dynamic from "next/dynamic";
 import React, { useEffect, useRef } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useMediaQuery } from "react-responsive";
@@ -34,6 +37,18 @@ import LoadingMessage from "./LoadingMessage";
 
 // Images
 import EthLogo from "../../public/eth-logo.png";
+
+const ClientMobileView = dynamic(() => import("./MobileView"), {
+  ssr: false,
+});
+
+const ClientNFTs = dynamic(() => import("./NFTs"), {
+  ssr: false,
+});
+
+const ClientTransactions = dynamic(() => import("./TransactionsTable"), {
+  ssr: false,
+});
 
 function App() {
   const [loading] = useRecoilState(loadingState);
@@ -152,7 +167,9 @@ function App() {
               >
                 {walletInfo && walletInfo.transactions.length ? (
                   <>
-                    <TransactionsTable transactions={walletInfo.transactions} />
+                    <ClientTransactions
+                      transactions={walletInfo.transactions}
+                    />
                     {walletInfo.transactions.length >= 20 ? (
                       <p className="text-white text-sm text-center mt-3">
                         Showing first 20 transactions{" "}
@@ -189,7 +206,7 @@ function App() {
               </AccordionItem>
               <AccordionItem key="3" aria-label="Accordion 3" title="NFTs">
                 {walletInfo.nfts.length ? (
-                  <NFTs nftList={walletInfo.nfts} />
+                  <ClientNFTs nftList={walletInfo.nfts} />
                 ) : (
                   <p className="text-sm text-white text-center">
                     This wallet does not have any NFTs
@@ -198,7 +215,7 @@ function App() {
               </AccordionItem>
             </Accordion>
           ) : (
-            <MobileView />
+            <ClientMobileView />
           )
         ) : (
           <></>

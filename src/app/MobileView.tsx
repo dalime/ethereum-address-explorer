@@ -1,4 +1,5 @@
 // Global imports
+import dynamic from "next/dynamic";
 import React, { Key, useState, useRef, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useMediaQuery } from "react-responsive";
@@ -11,6 +12,14 @@ import { walletInfoState, walletAddressState } from "@/recoil/atoms";
 import BalanceInfo from "./BalanceInfo";
 import TransactionsTable from "./TransactionsTable";
 import NFTs from "./NFTs";
+
+const ClientNFTs = dynamic(() => import("./NFTs"), {
+  ssr: false,
+});
+
+const ClientTransactions = dynamic(() => import("./TransactionsTable"), {
+  ssr: false,
+});
 
 function MobileView() {
   const [walletInfo] = useRecoilState(walletInfoState);
@@ -47,7 +56,7 @@ function MobileView() {
       case "transactions":
         return walletInfo.transactions && walletInfo.transactions.length ? (
           <>
-            <TransactionsTable transactions={walletInfo.transactions} />
+            <ClientTransactions transactions={walletInfo.transactions} />
             {walletInfo.transactions.length >= 20 ? (
               <p className="text-white text-sm text-center mt-3">
                 Showing first 20 transactions
@@ -83,7 +92,7 @@ function MobileView() {
         );
       case "nfts":
         return walletInfo.nfts.length ? (
-          <NFTs nftList={walletInfo.nfts} />
+          <ClientNFTs nftList={walletInfo.nfts} />
         ) : (
           <p className="text-sm text-white text-center">
             This wallet has no recorded transactions

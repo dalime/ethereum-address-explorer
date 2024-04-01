@@ -23,7 +23,7 @@ export const copyTextToClipboard = async (text: string): Promise<boolean> => {
  * @returns boolean | null
  */
 export const pageWasReloaded = (): boolean | null => {
-  if (window.performance) {
+  if (window && typeof window !== "undefined" && window.performance) {
     const navigation = window.performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming;
 
     if (navigation && navigation.type === "reload") {
