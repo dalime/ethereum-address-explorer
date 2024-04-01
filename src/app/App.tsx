@@ -1,8 +1,8 @@
 // Global imports
 import React, { useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { Image, Accordion, AccordionItem } from "@nextui-org/react";
 import { useMediaQuery } from "react-responsive";
+import { Image, Accordion, AccordionItem, Link } from "@nextui-org/react";
 
 // Recoiil
 import { ethPriceState, loadingState, walletInfoState } from "@/recoil/atoms";
@@ -56,7 +56,7 @@ function App() {
             isMobile ? 1.5 : isTablet ? 3 : isDesktop ? 4 : 6
           }rem`,
           position: isMobile ? "relative" : "initial",
-          paddingBottom: 20,
+          paddingBottom: 40,
         }}
       >
         {walletInfo ? (
@@ -121,6 +121,14 @@ function App() {
         ) : (
           <></>
         )}
+
+        <p
+          className="text-white text-sm text-center mt-10"
+          style={{ position: "absolute", bottom: 5 }}
+        >
+          Developed by <span className="text-bold">Danny Lim</span>{" "}
+          <Link href="https://github.com/dalime">(dalime)</Link>
+        </p>
       </main>
     </>
   );
