@@ -22,9 +22,46 @@ import {
 
 interface Props {
   transactions: Transaction[];
+  mobile?: boolean;
 }
 
-function TransactionsTable({ transactions }: Props) {
+function MobileTransactionsTable({ transactions }: Props) {
+  return (
+    <Table style={{ marginBottom: 20 }}>
+      <TableHeader>
+        <TableColumn>Transaction Hash</TableColumn>
+        <TableColumn>From</TableColumn>
+        <TableColumn>To</TableColumn>
+        <TableColumn>Value</TableColumn>
+      </TableHeader>
+      <TableBody>
+        {transactions.map((transaction) => {
+          const { transactionHash, topics } = transaction;
+
+          const { fromAddress, toAddress } = parseAddresses(topics);
+          const tokenAmount = parseTransactionValue(topics[3]);
+
+          const hashStr = `${transactionHash.substring(0, 10)}...`;
+
+          return (
+            <TableRow key={transaction.transactionHash}>
+              <TableCell>{hashStr}</TableCell>
+              <TableCell>{fromAddress}</TableCell>
+              <TableCell>{toAddress}</TableCell>
+              <TableCell>
+                {tokenAmount ? tokenAmount.toString() : "Unknown"}
+              </TableCell>
+            </TableRow>
+          );
+        })}
+      </TableBody>
+    </Table>
+  );
+}
+
+function TransactionsTable({ transactions, mobile }: Props) {
+  if (mobile) return <MobileTransactionsTable transactions={transactions} />;
+
   return (
     <Table style={{ marginBottom: 20 }}>
       <TableHeader>

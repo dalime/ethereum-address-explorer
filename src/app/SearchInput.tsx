@@ -30,11 +30,21 @@ function SearchInput({ flat, mobile }: Props) {
   const [, setWalletInfo] = useRecoilState(walletInfoState);
 
   /**
+   * Checks if walletAddress is valid ETH address using utils
+   */
+  const isInvalid = useMemo(() => {
+    if (walletAddress === "") return false;
+
+    return isValidEthAddress(walletAddress) ? false : true;
+  }, [walletAddress]);
+
+  /**
    * Submits the form
    * @param e FormEvent<HTMLFormElement>
    */
   const submitForm = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isInvalid) return;
     setLoading(true);
     const walletInfo = await fetchAddressInfo(walletAddress);
     setLoading(false);
@@ -45,15 +55,6 @@ function SearchInput({ flat, mobile }: Props) {
   };
 
   /**
-   * Checks if walletAddress is valid ETH address using utils
-   */
-  const isInvalid = useMemo(() => {
-    if (walletAddress === "") return false;
-
-    return isValidEthAddress(walletAddress) ? false : true;
-  }, [walletAddress]);
-
-  /**
    * Renders submit button
    * @returns JSX.Element
    */
@@ -61,7 +62,7 @@ function SearchInput({ flat, mobile }: Props) {
     <Button
       type="submit"
       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition duration-200"
-      disabled={loading}
+      disabled={loading || isInvalid}
       style={flat ? { marginLeft: 10 } : {}}
     >
       {loading ? <Spinner /> : "Explore"}

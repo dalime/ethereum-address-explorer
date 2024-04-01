@@ -31,3 +31,10 @@ body {
     text-wrap: balance;
   }
 }
+
+.blurry-background {
+  --tw-backdrop-blur: blur(16px);
+  --tw-backdrop-saturate: saturate(1.5);
+  backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
+  background-color: rgb(0 0 0 / 0.7);
+}

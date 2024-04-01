@@ -13,6 +13,7 @@ import { fetchEthPrice } from "@/actions";
 // Components
 import Navigation from "./Navigation";
 import SearchInput from "./SearchInput";
+import MobileView from "./MobileView";
 import BalanceInfo from "./BalanceInfo";
 import TransactionsTable from "./TransactionsTable";
 import NFTs from "./NFTs";
@@ -25,10 +26,10 @@ function App() {
   const [walletInfo] = useRecoilState(walletInfoState);
   const [, setEthPrice] = useRecoilState(ethPriceState);
 
+  const isSmall = useMediaQuery({ maxWidth: 640 });
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const isTablet = useMediaQuery({ maxWidth: 1000 });
   const isDesktop = useMediaQuery({ maxWidth: 1200 });
-  const isLargeScreen = useMediaQuery({ minWidth: 1200 });
 
   useEffect(() => {
     const getAndSetEthPrice = async () => {
@@ -43,10 +44,18 @@ function App() {
     <>
       {walletInfo ? <Navigation /> : <></>}
       <main
-        className="flex min-h-screen flex-col items-center justify-center dark text-foreground bg-background"
+        className={`flex min-h-screen flex-col items-center justify-${
+          isMobile ? "start" : "center"
+        } dark text-foreground bg-background`}
         style={{
-          paddingLeft: `${isMobile ? 2 : isTablet ? 3 : isDesktop ? 4 : 6}rem`,
-          paddingRight: `${isMobile ? 2 : isTablet ? 3 : isDesktop ? 4 : 6}rem`,
+          paddingLeft: `${
+            isMobile ? 1.5 : isTablet ? 3 : isDesktop ? 4 : 6
+          }rem`,
+          paddingRight: `${
+            isMobile ? 1.5 : isTablet ? 3 : isDesktop ? 4 : 6
+          }rem`,
+          position: isMobile ? "relative" : "initial",
+          paddingBottom: 20,
         }}
       >
         {walletInfo ? (
@@ -70,31 +79,35 @@ function App() {
         {loading ? (
           <></>
         ) : walletInfo ? (
-          <Accordion defaultExpandedKeys={["1"]}>
-            <AccordionItem key="1" aria-label="Accordion 1" title="Overview">
-              {walletInfo.balance && (
-                <BalanceInfo walletBalance={walletInfo.balance} />
-              )}
-            </AccordionItem>
-            <AccordionItem
-              key="2"
-              aria-label="Accordion 2"
-              title="Transactions"
-            >
-              {walletInfo.transactions.length ? (
-                <TransactionsTable transactions={walletInfo.transactions} />
-              ) : (
-                <></>
-              )}
-            </AccordionItem>
-            <AccordionItem key="3" aria-label="Accordion 3" title="NFTs">
-              {walletInfo.nfts.length ? (
-                <NFTs nftList={walletInfo.nfts} />
-              ) : (
-                <></>
-              )}
-            </AccordionItem>
-          </Accordion>
+          !isSmall ? (
+            <Accordion defaultExpandedKeys={["1"]}>
+              <AccordionItem key="1" aria-label="Accordion 1" title="Overview">
+                {walletInfo.balance && (
+                  <BalanceInfo walletBalance={walletInfo.balance} />
+                )}
+              </AccordionItem>
+              <AccordionItem
+                key="2"
+                aria-label="Accordion 2"
+                title="Transactions"
+              >
+                {walletInfo.transactions.length ? (
+                  <TransactionsTable transactions={walletInfo.transactions} />
+                ) : (
+                  <></>
+                )}
+              </AccordionItem>
+              <AccordionItem key="3" aria-label="Accordion 3" title="NFTs">
+                {walletInfo.nfts.length ? (
+                  <NFTs nftList={walletInfo.nfts} />
+                ) : (
+                  <></>
+                )}
+              </AccordionItem>
+            </Accordion>
+          ) : (
+            <MobileView />
+          )
         ) : (
           <></>
         )}
