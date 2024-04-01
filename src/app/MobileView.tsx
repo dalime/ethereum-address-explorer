@@ -1,5 +1,5 @@
 // Global imports
-import React, { Key, useState, useRef } from "react";
+import React, { Key, useState, useRef, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useMediaQuery } from "react-responsive";
 import { Tabs, Tab, Button, Tooltip } from "@nextui-org/react";
@@ -24,6 +24,13 @@ function MobileView() {
   const [selectedTab, setSelectedTab] = useState<string>(
     lastSelectedTab || "overview"
   );
+
+  useEffect(() => {
+    // Scroll to the top
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    // Reset zoom to default
+    (document.body.style as any)["zoom"] = "1";
+  }, []);
 
   if (!walletInfo) return <></>;
 
