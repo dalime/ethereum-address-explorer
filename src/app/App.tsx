@@ -1,11 +1,24 @@
 // Global imports
-import React, { useEffect } from "react";
-import { useRecoilState } from "recoil";
+import React, { useEffect, useRef } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useMediaQuery } from "react-responsive";
-import { Image, Accordion, AccordionItem, Link } from "@nextui-org/react";
+import {
+  Image,
+  Accordion,
+  AccordionItem,
+  Link,
+  Selection,
+  Button,
+  Tooltip,
+} from "@nextui-org/react";
 
 // Recoiil
-import { ethPriceState, loadingState, walletInfoState } from "@/recoil/atoms";
+import {
+  ethPriceState,
+  loadingState,
+  walletInfoState,
+  walletAddressState,
+} from "@/recoil/atoms";
 
 // Actions
 import { fetchEthPrice } from "@/actions";
@@ -26,11 +39,29 @@ function App() {
   const [loading] = useRecoilState(loadingState);
   const [walletInfo] = useRecoilState(walletInfoState);
   const [, setEthPrice] = useRecoilState(ethPriceState);
+  const walletAddressInitial = useRecoilValue(walletAddressState); // Capture the initial state
+  const walletAddressRef = useRef(walletAddressInitial); // Use useRef to hold the initial value
 
   const isSmall = useMediaQuery({ maxWidth: 640 });
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const isTablet = useMediaQuery({ maxWidth: 1000 });
   const isDesktop = useMediaQuery({ maxWidth: 1200 });
+
+  const lastSelectedTab = sessionStorage.getItem("lastSelectedTab");
+  let lastSelectedIndex: string = "";
+  switch (lastSelectedTab) {
+    case "overview":
+      lastSelectedIndex = "1";
+      break;
+    case "transactions":
+      lastSelectedIndex = "2";
+      break;
+    case "nfts":
+      lastSelectedIndex = "3";
+      break;
+    default:
+      break;
+  }
 
   useEffect(() => {
     const getAndSetEthPrice = async () => {
@@ -83,7 +114,28 @@ function App() {
           <LoadingMessage />
         ) : walletInfo ? (
           !isSmall ? (
-            <Accordion defaultExpandedKeys={["1"]}>
+            <Accordion
+              defaultExpandedKeys={[lastSelectedIndex || "1"]}
+              onSelectionChange={(key: Selection) => {
+                const keyValue = (key.valueOf() as any)["currentKey"];
+                let sessionValue = "";
+                console.log("keyValue", keyValue);
+                switch (keyValue) {
+                  case "1":
+                    sessionValue = "overview";
+                    break;
+                  case "2":
+                    sessionValue = "transactions";
+                    break;
+                  case "3":
+                    sessionValue = "nfts";
+                    break;
+                  default:
+                    break;
+                }
+                sessionStorage.setItem("lastSelectedTab", sessionValue);
+              }}
+            >
               <AccordionItem key="1" aria-label="Accordion 1" title="Overview">
                 {walletInfo.balance && (
                   <BalanceInfo walletBalance={walletInfo.balance} />
@@ -99,7 +151,27 @@ function App() {
                     <TransactionsTable transactions={walletInfo.transactions} />
                     {walletInfo.transactions.length >= 20 ? (
                       <p className="text-white text-sm text-center mt-3">
-                        Showing first 20 transactions
+                        Showing first 20 transactions{" "}
+                        <Tooltip
+                          color="foreground"
+                          content={
+                            <div className="px-1 py-2">
+                              <div className="text-small font-bold text-white">
+                                View in Etherscan
+                              </div>
+                            </div>
+                          }
+                        >
+                          <Button
+                            onClick={() =>
+                              (window.location.href = `https://etherscan.io/address/${walletAddressRef.current}`)
+                            }
+                            color="primary"
+                            style={{ marginLeft: 5 }}
+                          >
+                            View All
+                          </Button>
+                        </Tooltip>
                       </p>
                     ) : (
                       <></>

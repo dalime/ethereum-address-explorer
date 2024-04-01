@@ -14,6 +14,7 @@ const getSessionWalletInfo = (): WalletInfo | null => {
   const wasReloaded = pageWasReloaded();
   if (wasReloaded) {
     sessionStorage.removeItem("ethWalletInfo");
+    sessionStorage.removeItem("lastSelectedTab");
     return null;
   }
 

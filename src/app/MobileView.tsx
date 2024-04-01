@@ -1,11 +1,11 @@
 // Global imports
-import React, { Key, useState } from "react";
-import { useRecoilState } from "recoil";
+import React, { Key, useState, useRef } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useMediaQuery } from "react-responsive";
-import { Tabs, Tab } from "@nextui-org/react";
+import { Tabs, Tab, Button, Tooltip } from "@nextui-org/react";
 
 // Recoil
-import { walletInfoState } from "@/recoil/atoms";
+import { walletInfoState, walletAddressState } from "@/recoil/atoms";
 
 // Components
 import BalanceInfo from "./BalanceInfo";
@@ -14,10 +14,16 @@ import NFTs from "./NFTs";
 
 function MobileView() {
   const [walletInfo] = useRecoilState(walletInfoState);
+  const walletAddressInitial = useRecoilValue(walletAddressState); // Capture the initial state
+  const walletAddressRef = useRef(walletAddressInitial); // Use useRef to hold the initial value
 
   const isXs = useMediaQuery({ maxWidth: 320 });
 
-  const [selectedTab, setSelectedTab] = useState<string>("overview");
+  const lastSelectedTab = sessionStorage.getItem("lastSelectedTab");
+
+  const [selectedTab, setSelectedTab] = useState<string>(
+    lastSelectedTab || "overview"
+  );
 
   if (!walletInfo) return <></>;
 
@@ -36,6 +42,26 @@ function MobileView() {
             {walletInfo.transactions.length >= 20 ? (
               <p className="text-white text-sm text-center mt-3">
                 Showing first 20 transactions
+                <Tooltip
+                  color="foreground"
+                  content={
+                    <div className="px-1 py-2">
+                      <div className="text-small font-bold text-white">
+                        View in Etherscan
+                      </div>
+                    </div>
+                  }
+                >
+                  <Button
+                    onClick={() =>
+                      (window.location.href = `https://etherscan.io/address/${walletAddressRef.current}`)
+                    }
+                    color="primary"
+                    style={{ marginLeft: 5 }}
+                  >
+                    View All
+                  </Button>
+                </Tooltip>
               </p>
             ) : (
               <></>
@@ -56,10 +82,9 @@ function MobileView() {
   };
 
   const updateTab = (newTab: Key): void => {
-    console.log("updating tab", newTab);
     const stringRep = newTab.toString();
-    console.log("stringRep", stringRep);
     setSelectedTab(stringRep);
+    sessionStorage.setItem("lastSelectedTab", stringRep);
   };
 
   return (

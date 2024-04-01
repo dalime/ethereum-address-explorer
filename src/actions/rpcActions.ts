@@ -144,6 +144,7 @@ const fetchAddressInfo = async (walletAddress: string) => {
 
     sessionStorage.setItem("ethWalletInfo", JSON.stringify(returnObj));
     sessionStorage.setItem("ethWalletAddress", walletAddress);
+    sessionStorage.removeItem("lastSelectedTab");
 
     return returnObj;
   } catch (error) {
