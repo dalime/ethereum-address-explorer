@@ -50,7 +50,7 @@ function BalanceInfo({ walletBalance }: Props): JSX.Element {
         <span
           className={`text-white text-${isSmall ? "sm" : "md"} font-bold`}
           style={{
-            overflowWrap: "break-word",
+            overflowWrap: "anywhere",
             display: "flex",
             justifyContent: "flex-start",
             alignItems: "center",
