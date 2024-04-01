@@ -1,12 +1,12 @@
 // Global imports
-import React, { CSSProperties, useState, useEffect } from "react";
+import React, { CSSProperties, useState } from "react";
 import { Card, Image, Button, Tooltip } from "@nextui-org/react";
 
 // Types
 import { NFTData, NFTMetadata } from "@/types";
 
 // Utils
-import { parseNFTMetadata, formatETH, isValidEthAddress } from "@/utils";
+import { parseNFTMetadata, formatETH, shrinkAddress } from "@/utils";
 
 // Images
 import PlaceholderImg from "../../public/placeholder-img.png";
@@ -43,7 +43,7 @@ const ImageWithFallback = ({
       <Button
         style={{
           width: "100%",
-          height: 265,
+          height: "100%",
           position: "relative",
           overflow: "hidden",
           display: "flex",
@@ -51,6 +51,10 @@ const ImageWithFallback = ({
           alignItems: "center",
           cursor: "pointer",
           borderRadius: 0,
+          padding: 0,
+          paddingRight: 0,
+          margin: 0,
+          marginRight: 0,
         }}
         onClick={() => (src ? (window.location.href = src) : {})}
       >
@@ -72,7 +76,7 @@ const ImageWithFallback = ({
           height={265}
           style={{
             width: "100%",
-            height: "auto",
+            height: 265,
             objectFit: "cover",
             borderRadius: 0,
             ...style,
@@ -119,6 +123,25 @@ function NFTs({ nftList }: Props) {
           (window.location.href = `https://opensea.io/assets/${tokenAddress}/${tokenId}`)
         }
       >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          className="w-6 h-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+          />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+          />
+        </svg>{" "}
         OpenSea
       </Button>
     </Tooltip>
@@ -137,7 +160,11 @@ function NFTs({ nftList }: Props) {
           }
           return (
             // Apply min-w-[200px] to ensure a minimum width of 200px for the card
-            <Card key={`nft-${index}`} className="min-w-[200px] w-full">
+            <Card
+              key={`nft-${index}`}
+              className="min-w-[200px] w-full"
+              style={{ padding: 0, margin: 0 }}
+            >
               {nftMetadata ? (
                 <>
                   {nftMetadata.image ? (
@@ -155,18 +182,28 @@ function NFTs({ nftList }: Props) {
                   )}
                   <div className="flex justify-between items-start px-4 mb-3 mt-3">
                     <div className="flex-1">
-                      <div>
-                        <span className="text-gray-400 text-sm">NAME</span>
-                        <br />
-                        <span className="text-white text-md font-bold">
-                          {name}
-                        </span>
-                      </div>
+                      {name ? (
+                        <div>
+                          <span className="text-gray-400 text-sm">NAME</span>
+                          <br />
+                          <span className="text-white text-md font-bold">
+                            {name}
+                          </span>
+                        </div>
+                      ) : (
+                        <div>
+                          <span className="text-gray-400 text-sm">#</span>
+                          <br />
+                          <span className="text-white text-md font-bold">
+                            {shrinkAddress(token_id.toString())}
+                          </span>
+                        </div>
+                      )}
                       <div className="mt-3">
                         {renderOpenSeaBtn(token_address, token_id)}
                       </div>
                     </div>
-                    <div className="flex-1">
+                    <div className="flex-1" style={{ marginLeft: 5 }}>
                       {nftMetadata.fiatPrice && (
                         <div>
                           <span className="text-gray-400 text-sm">
