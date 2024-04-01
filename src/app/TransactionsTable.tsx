@@ -103,7 +103,15 @@ function TransactionsTable({ transactions, mobile }: Props) {
                   {hashStr}
                 </LinkBtn>
               </TableCell>
-              <TableCell>{blockNumber}</TableCell>
+              <TableCell>
+                <LinkBtn
+                  func={() =>
+                    (window.location.href = `https://etherscan.io/block/${blockNumber}`)
+                  }
+                >
+                  {blockNumber}
+                </LinkBtn>
+              </TableCell>
               <TableCell>{timeAgo}</TableCell>
               <TableCell>
                 <LinkBtn func={() => exploreNewWallet(from)}>
