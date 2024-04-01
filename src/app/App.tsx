@@ -91,7 +91,7 @@ function App() {
                 aria-label="Accordion 2"
                 title="Transactions"
               >
-                {walletInfo.transactions.length ? (
+                {walletInfo && walletInfo.transactions.length ? (
                   <TransactionsTable transactions={walletInfo.transactions} />
                 ) : (
                   <></>
