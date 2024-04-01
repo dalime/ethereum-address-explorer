@@ -28,6 +28,7 @@ import {
   shrinkAddress,
   formatValueToEth,
   calculateGasFeeInEth,
+  capitalizeFirstLetterOfEachWord,
 } from "@/utils";
 
 interface LinkBtnProps {
@@ -109,6 +110,7 @@ function TransactionsTable({ transactions }: Props) {
           const timeAgo = formatDistanceToNow(
             new Date(parseInt(timeStamp, 10) * 1000)
           );
+          const timeAgoFinal = capitalizeFirstLetterOfEachWord(timeAgo);
           const hashStr = `${hash.substring(0, 13)}...`;
           const gasFeeInEth = calculateGasFeeInEth(gasUsed, gasPrice);
           const finalValue = formatValueToEth(value);
@@ -135,7 +137,9 @@ function TransactionsTable({ transactions }: Props) {
                   {blockNumber}
                 </LinkBtn>
               </TableCell>
-              <TableCell>{timeAgo}</TableCell>
+              <TableCell>
+                <span style={{ whiteSpace: "nowrap" }}>{timeAgoFinal}</span>
+              </TableCell>
               <TableCell>
                 <LinkBtn
                   func={() => exploreNewWallet(from)}

@@ -38,3 +38,17 @@ export const pageWasReloaded = (): boolean | null => {
     return null;
   }
 }
+
+/**
+ * Capitalizes the 1st letter in each word in a string
+ * @param input string
+ * @returns string
+ */
+export const capitalizeFirstLetterOfEachWord = (input: string): string => {
+  return input
+    .split(' ')
+    .map((word) => 
+      word.charAt(0).toUpperCase() + word.slice(1)
+    )
+    .join(' '); 
+}
