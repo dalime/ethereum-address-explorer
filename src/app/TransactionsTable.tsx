@@ -22,7 +22,12 @@ import { loadingState, walletInfoState } from "@/recoil/atoms";
 import { fetchAddressInfo } from "@/actions";
 
 // Utils
-import { formatETH, shrinkAddress } from "@/utils";
+import {
+  formatETH,
+  shrinkAddress,
+  formatValueToEth,
+  calculateGasFeeInEth,
+} from "@/utils";
 
 interface LinkBtnProps {
   children?: JSX.Element | JSX.Element[] | string;
@@ -39,10 +44,9 @@ function LinkBtn({ children, func }: LinkBtnProps): JSX.Element {
 
 interface Props {
   transactions: Transaction[];
-  mobile?: boolean;
 }
 
-function TransactionsTable({ transactions, mobile }: Props) {
+function TransactionsTable({ transactions }: Props) {
   const [, setLoading] = useRecoilState(loadingState);
   const [, setWalletInfo] = useRecoilState(walletInfoState);
 
@@ -74,7 +78,6 @@ function TransactionsTable({ transactions, mobile }: Props) {
       <TableBody>
         {transactions.map((transaction) => {
           const {
-            blockHash,
             blockNumber,
             timeStamp,
             value,
@@ -88,9 +91,9 @@ function TransactionsTable({ transactions, mobile }: Props) {
           const timeAgo = formatDistanceToNow(
             new Date(parseInt(timeStamp, 10) * 1000)
           );
-          const valueInEth = BigInt(value) / 10n ** 18n;
-          const gasFeeInEth = (BigInt(gasPrice) * BigInt(gasUsed)) / 10n ** 18n;
           const hashStr = `${hash.substring(0, 13)}...`;
+          const gasFeeInEth = calculateGasFeeInEth(gasUsed, gasPrice);
+          const finalValue = formatValueToEth(value);
 
           return (
             <TableRow key={`transaction-${hash}`}>
@@ -123,8 +126,8 @@ function TransactionsTable({ transactions, mobile }: Props) {
                   {to ? shrinkAddress(to) : ""}
                 </LinkBtn>
               </TableCell>
-              <TableCell>{valueInEth ? formatETH(valueInEth) : ""}</TableCell>
-              <TableCell>{gasFeeInEth ? formatETH(gasFeeInEth) : ""}</TableCell>
+              <TableCell>{finalValue || ""}</TableCell>
+              <TableCell>{gasFeeInEth || ""}</TableCell>
             </TableRow>
           );
         })}

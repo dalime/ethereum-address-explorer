@@ -44,7 +44,7 @@ function MobileView() {
         );
       case "transactions":
         return walletInfo.transactions && walletInfo.transactions.length ? (
-          <TransactionsTable transactions={walletInfo.transactions} mobile />
+          <TransactionsTable transactions={walletInfo.transactions} />
         ) : (
           <></>
         );
