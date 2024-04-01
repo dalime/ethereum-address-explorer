@@ -28,11 +28,15 @@ export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const renderSearchInput = (desktop: boolean): JSX.Element => (
-    <SearchInput flat={desktop} mobile={!desktop} />
+    <SearchInput
+      flat={desktop}
+      mobile={!desktop}
+      closeMenu={() => setIsMenuOpen(false)}
+    />
   );
 
   return (
-    <Navbar onMenuOpenChange={setIsMenuOpen}>
+    <Navbar isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}

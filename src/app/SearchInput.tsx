@@ -20,9 +20,10 @@ import { isValidEthAddress } from "@/utils";
 interface Props {
   flat?: boolean;
   mobile?: boolean;
+  closeMenu?: () => void;
 }
 
-function SearchInput({ flat }: Props) {
+function SearchInput({ flat, mobile, closeMenu }: Props) {
   const [walletAddress, setWalletAddress] = useRecoilState(walletAddressState);
   const [loading, setLoading] = useRecoilState(loadingState);
   const [, setWalletInfo] = useRecoilState(walletInfoState);
@@ -45,6 +46,7 @@ function SearchInput({ flat }: Props) {
   const submitForm = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isInvalid || !walletAddress.length) return;
+    if (closeMenu) closeMenu();
     setLoading(true);
     const walletInfo = await fetchAddressInfo(walletAddress);
     setLoading(false);
