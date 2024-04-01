@@ -1,10 +1,19 @@
 import { atom } from 'recoil';
 
+// Utils
+import { pageWasReloaded } from '@/utils';
+
 /**
  * Looks for saved wallet address in sessionStorage
  * @returns string
  */
 const getSessionWalletAddress = (): string => {
+  const wasReloaded = pageWasReloaded();
+  if (wasReloaded) {
+    sessionStorage.removeItem("ethWalletAddress");
+    return "";
+  }
+
   const sessionWalletAddress = sessionStorage.getItem("ethWalletAddress");
   if (sessionWalletAddress !== null) {
     try {
