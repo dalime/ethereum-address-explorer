@@ -42,12 +42,14 @@ function App() {
   }, [setEthPrice]);
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen dark text-foreground bg-background">
       {walletInfo ? <Navigation /> : <></>}
       <main
-        className={`flex min-h-screen flex-col items-center justify-${
+        className={`flex flex-col items-center justify-${
           isMobile && walletInfo ? "start" : "center"
-        } dark text-foreground bg-background`}
+        } grow px-${
+          isMobile ? "6" : isTablet ? "12" : isDesktop ? "16" : "24"
+        }`}
         style={{
           paddingLeft: `${
             isMobile ? 1.5 : isTablet ? 3 : isDesktop ? 4 : 6
@@ -121,16 +123,13 @@ function App() {
         ) : (
           <></>
         )}
-
-        <p
-          className="text-white text-sm text-center mt-10"
-          style={{ position: "absolute", bottom: 5 }}
-        >
-          Developed by <span className="text-bold">Danny Lim</span>{" "}
-          <Link href="https://github.com/dalime">(dalime)</Link>
-        </p>
       </main>
-    </>
+
+      <footer className="text-white text-sm text-center p-5">
+        Developed by <span className="font-bold">Danny Lim</span>{" "}
+        <Link href="https://github.com/dalime">(dalime)</Link>
+      </footer>
+    </div>
   );
 }
 
