@@ -59,22 +59,29 @@ export const formatValueToEth = (value: string): string => {
   const wei: bigint = BigInt(value);
   const conversionFactor: bigint = BigInt(1e18);
 
-  // Convert Wei to ETH. Use BigInt arithmetic for precision and convert the result to a number for formatting.
-  const ethValue: number = Number(wei) / Number(conversionFactor);
+  // Convert Wei to ETH using BigInt for precision and convert the result to a number for formatting.
+  let ethValue: number = Number(wei) / Number(conversionFactor);
 
-  // Determine the number of decimal places
-  let formattedEthValue: string;
-  if (ethValue < 1) {
-    // If the ETH value is less than 1, format with up to 6 decimal places
-    formattedEthValue = ethValue.toFixed(6);
-  } else {
-    // If the ETH value is 1 or more, format with up to 4 decimal places
-    formattedEthValue = ethValue.toFixed(4);
+  // Initially format with up to 6 decimal places
+  let formattedEthValue: string = ethValue.toFixed(6);
+
+  // Remove unnecessary trailing zeros
+  formattedEthValue = parseFloat(formattedEthValue).toString();
+
+  // Check if after removing trailing zeros we are left with a decimal
+  const hasDecimal = formattedEthValue.includes('.');
+
+  if (hasDecimal) {
+    // Determine the number of decimal places based on the value
+    const decimalPlaces = ethValue < 1 ? 6 : 4;
+    // Adjust the number of decimal places as needed, without adding unnecessary zeros
+    ethValue = parseFloat(ethValue.toFixed(decimalPlaces));
+    formattedEthValue = ethValue.toString();
   }
 
   // Append " ETH" and return
   return `${formattedEthValue} ETH`;
-}
+};
 
 /**
  * Calculates gas fee in ETH by using value, gasUsed, and gasPrice

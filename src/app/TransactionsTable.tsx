@@ -156,8 +156,14 @@ function TransactionsTable({ transactions }: Props) {
                   {to ? shrinkAddress(to) : ""}
                 </LinkBtn>
               </TableCell>
-              <TableCell>{finalValue || ""}</TableCell>
-              <TableCell>{gasFeeInEth || ""}</TableCell>
+              <TableCell>
+                <span style={{ whiteSpace: "nowrap" }}>{finalValue || ""}</span>
+              </TableCell>
+              <TableCell>
+                <span style={{ whiteSpace: "nowrap" }}>
+                  {gasFeeInEth || ""}
+                </span>
+              </TableCell>
             </TableRow>
           );
         })}

@@ -18,20 +18,16 @@ export const formatUSD = (number: number): string => {
  * @returns string
  */
 export const formatETH = (number: number | bigint): string => {
-  let amountStr = number.toString();
-  const decimalIndex = amountStr.indexOf('.');
+  const numericValue = typeof number === 'bigint' ? Number(number) : number;
 
-  if (decimalIndex !== -1) {
-    const decimals = amountStr.substring(decimalIndex + 1, decimalIndex + 5);
-    const trimmedDecimals = decimals.replace(/0+$/, ''); // Remove trailing zeros
-    amountStr = amountStr.substring(0, decimalIndex) + (trimmedDecimals.length > 0 ? '.' + trimmedDecimals : '');
-  }
+  const formattedValue = parseFloat(numericValue.toFixed(4));
 
-  let [integerPart] = amountStr.split('.');
-  integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const finalAmount = new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 4,
+  }).format(formattedValue);
 
-  const finalAmount = amountStr.includes('.') ? integerPart + amountStr.substring(amountStr.indexOf('.')) : integerPart;
-  return finalAmount + ' ETH';
+  return `${finalAmount} ETH`;
 };
 
 /**
