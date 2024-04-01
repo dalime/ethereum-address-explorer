@@ -8,10 +8,27 @@ import { toast } from "react-hot-toast";
 import { ethPriceState, walletAddressState } from "@/recoil/atoms";
 
 // Utils
-import { formatUSD, formatETH, copyTextToClipboard } from "@/utils";
+import { formatUSD, copyTextToClipboard } from "@/utils";
 
 // Images
 import EthLogo from "../../public/eth-logo.png";
+
+function formatEth(value: string): string {
+  const numericValue = Number(value);
+  if (isNaN(numericValue)) {
+    throw new Error("Invalid input: value is not a number");
+  }
+
+  const decimalPlaces = numericValue < 1 ? 6 : 4;
+
+  // Format with thousands separators and dynamic decimal places
+  const formattedValue = new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: decimalPlaces,
+    maximumFractionDigits: decimalPlaces,
+  }).format(numericValue);
+
+  return `${formattedValue} ETH`;
+}
 
 interface Props {
   walletBalance: string;
@@ -24,10 +41,8 @@ function BalanceInfo({ walletBalance }: Props): JSX.Element {
   const walletAddressRef = useRef(walletAddressInitial); // Use useRef to hold the initial value
 
   const isSmall = useMediaQuery({ maxWidth: 640 });
-
   const walletBalanceInt = parseInt(walletBalance, 10);
-  const roundedBalance = Math.round(walletBalanceInt * 100) / 100;
-
+  const formattedBalance = formatEth(walletBalance);
   const ethValue = ethPrice ? walletBalanceInt * ethPrice : null;
 
   return (
@@ -107,7 +122,7 @@ function BalanceInfo({ walletBalance }: Props): JSX.Element {
           className={`text-white text-${isSmall ? "sm" : "md"} font-bold`}
           style={{ overflowWrap: "break-word" }}
         >
-          {formatETH(walletBalanceInt)}
+          {formattedBalance}
         </span>
       </div>
       {ethValue ? (
