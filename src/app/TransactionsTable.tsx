@@ -9,6 +9,7 @@ import {
   TableRow,
   TableCell,
   Link,
+  Tooltip,
 } from "@nextui-org/react";
 import { formatDistanceToNow } from "date-fns";
 
@@ -32,14 +33,31 @@ import {
 interface LinkBtnProps {
   children?: JSX.Element | JSX.Element[] | string;
   func: () => void;
+  tooltipText?: string;
 }
 
-function LinkBtn({ children, func }: LinkBtnProps): JSX.Element {
-  return (
+function LinkBtn({ children, func, tooltipText }: LinkBtnProps): JSX.Element {
+  const renderLink = (): JSX.Element => (
     <Link style={{ cursor: "pointer" }} onClick={() => func()}>
       {children}
     </Link>
   );
+
+  if (tooltipText)
+    return (
+      <Tooltip
+        color="foreground"
+        content={
+          <div className="px-1 py-2">
+            <div className="text-small font-bold text-white">{tooltipText}</div>
+          </div>
+        }
+      >
+        {renderLink()}
+      </Tooltip>
+    );
+
+  return renderLink();
 }
 
 interface Props {
@@ -102,6 +120,7 @@ function TransactionsTable({ transactions }: Props) {
                   func={() =>
                     (window.location.href = `https://etherscan.io/tx/${hash}`)
                   }
+                  tooltipText="View in Etherscan"
                 >
                   {hashStr}
                 </LinkBtn>
@@ -111,18 +130,25 @@ function TransactionsTable({ transactions }: Props) {
                   func={() =>
                     (window.location.href = `https://etherscan.io/block/${blockNumber}`)
                   }
+                  tooltipText="View in Etherscan"
                 >
                   {blockNumber}
                 </LinkBtn>
               </TableCell>
               <TableCell>{timeAgo}</TableCell>
               <TableCell>
-                <LinkBtn func={() => exploreNewWallet(from)}>
+                <LinkBtn
+                  func={() => exploreNewWallet(from)}
+                  tooltipText="Explore this address"
+                >
                   {from ? shrinkAddress(from) : ""}
                 </LinkBtn>
               </TableCell>
               <TableCell>
-                <LinkBtn func={() => exploreNewWallet(to)}>
+                <LinkBtn
+                  func={() => exploreNewWallet(to)}
+                  tooltipText="Explore this address"
+                >
                   {to ? shrinkAddress(to) : ""}
                 </LinkBtn>
               </TableCell>
