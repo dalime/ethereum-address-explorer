@@ -8,9 +8,6 @@ export const metadata: Metadata = {
   title: "Ethereum Address Explorer",
   description:
     "A user interface for exploring blockchain data about an Ethereum address",
-  icons: {
-    icon: "./eth-logo.png",
-  },
 };
 
 export default function RootLayout({
