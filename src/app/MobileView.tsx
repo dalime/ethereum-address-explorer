@@ -95,7 +95,7 @@ function MobileView() {
           <ClientNFTs nftList={walletInfo.nfts} />
         ) : (
           <p className="text-sm text-white text-center">
-            This wallet has no recorded transactions
+            This wallet does not have any NFTs
           </p>
         );
       default:
