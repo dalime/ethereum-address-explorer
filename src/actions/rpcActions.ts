@@ -56,7 +56,7 @@ const fetchWalletBalance = async (walletAddress: string) => {
  */
 const fetchWalletTransactions = async (walletAddress: string) => {
   try {
-    const response = await fetch(`https://api.etherscan.io/api?module=logs&action=getLogs&address=${walletAddress}&page=1&offset=20&apikey=${process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY}`, {
+      const response = await fetch(`http://api.etherscan.io/api?module=account&action=txlist&address=${walletAddress}&sort=desc&page=1&offset=20`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

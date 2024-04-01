@@ -1,15 +1,24 @@
 export interface Transaction {
-  address: string;
   blockHash: string;
   blockNumber: string;
-  data: string;
+  confirmations: string;
+  contractAddress: string;
+  cumulativeGasUsed: string;
+  from: string;
+  functionName: string;
+  gas: string[];
   gasPrice: string;
   gasUsed: string;
-  logIndex: string;
+  hash: string;
+  input: string;
+  isError: string;
+  methodId: string;
+  nonce: string;
   timeStamp: string;
-  topics: string[];
-  transactionHash: string;
+  to: string;
   transactionIndex: string;
+  txreceipt_status: string;
+  value: string;
 }
 
 export interface WalletInfo {

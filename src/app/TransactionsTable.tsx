@@ -7,61 +7,22 @@ import {
   TableColumn,
   TableRow,
   TableCell,
+  Link,
 } from "@nextui-org/react";
+import { formatDistanceToNow } from "date-fns";
 
 // Types
 import { Transaction } from "@/types";
 
 // Utils
-import {
-  parseAddresses,
-  parseGasFee,
-  parseTransactionValue,
-  formatETH,
-} from "@/utils";
+import { formatETH, shrinkAddress } from "@/utils";
 
 interface Props {
   transactions: Transaction[];
   mobile?: boolean;
 }
 
-function MobileTransactionsTable({ transactions }: Props) {
-  return (
-    <Table style={{ marginBottom: 20 }}>
-      <TableHeader>
-        <TableColumn>Transaction Hash</TableColumn>
-        <TableColumn>From</TableColumn>
-        <TableColumn>To</TableColumn>
-        <TableColumn>Value</TableColumn>
-      </TableHeader>
-      <TableBody>
-        {transactions.map((transaction) => {
-          const { transactionHash, topics } = transaction;
-
-          const { fromAddress, toAddress } = parseAddresses(topics);
-          const tokenAmount = parseTransactionValue(topics[3]);
-
-          const hashStr = `${transactionHash.substring(0, 10)}...`;
-
-          return (
-            <TableRow key={transaction.transactionHash}>
-              <TableCell>{hashStr}</TableCell>
-              <TableCell>{fromAddress}</TableCell>
-              <TableCell>{toAddress}</TableCell>
-              <TableCell>
-                {tokenAmount ? tokenAmount.toString() : "Unknown"}
-              </TableCell>
-            </TableRow>
-          );
-        })}
-      </TableBody>
-    </Table>
-  );
-}
-
 function TransactionsTable({ transactions, mobile }: Props) {
-  if (mobile) return <MobileTransactionsTable transactions={transactions} />;
-
   return (
     <Table style={{ marginBottom: 20 }}>
       <TableHeader>
@@ -76,32 +37,34 @@ function TransactionsTable({ transactions, mobile }: Props) {
       <TableBody>
         {transactions.map((transaction) => {
           const {
-            transactionHash,
+            blockHash,
             blockNumber,
             timeStamp,
-            topics,
-            data,
+            value,
+            from,
+            to,
             gasPrice,
             gasUsed,
           } = transaction;
 
-          const { fromAddress, toAddress } = parseAddresses(topics);
-          const tokenAmount = parseTransactionValue(topics[3]);
-          const gasFee = parseGasFee(gasUsed, gasPrice);
-
-          const hashStr = `${transactionHash.substring(0, 13)}...`;
+          const timeAgo = formatDistanceToNow(
+            new Date(parseInt(timeStamp, 10) * 1000)
+          );
+          const valueInEth = BigInt(value) / 10n ** 18n;
+          const gasFeeInEth = (BigInt(gasPrice) * BigInt(gasUsed)) / 10n ** 18n;
+          const hashStr = `${blockHash.substring(0, 13)}...`;
 
           return (
-            <TableRow key={transaction.transactionHash}>
-              <TableCell>{hashStr}</TableCell>
-              <TableCell>{blockNumber}</TableCell>
-              <TableCell>{timeStamp}</TableCell>
-              <TableCell>{fromAddress}</TableCell>
-              <TableCell>{toAddress}</TableCell>
+            <TableRow key={`transaction-${blockHash}`}>
               <TableCell>
-                {tokenAmount ? tokenAmount.toString() : "Unknown"}
+                <Link>{hashStr}</Link>
               </TableCell>
-              <TableCell>{formatETH(gasFee)}</TableCell>
+              <TableCell>{blockNumber}</TableCell>
+              <TableCell>{timeAgo}</TableCell>
+              <TableCell>{from ? shrinkAddress(from) : ""}</TableCell>
+              <TableCell>{to ? shrinkAddress(to) : ""}</TableCell>
+              <TableCell>{valueInEth ? formatETH(valueInEth) : ""}</TableCell>
+              <TableCell>{gasFeeInEth ? formatETH(gasFeeInEth) : ""}</TableCell>
             </TableRow>
           );
         })}

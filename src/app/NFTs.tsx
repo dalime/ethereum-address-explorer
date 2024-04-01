@@ -116,7 +116,7 @@ function NFTs({ nftList }: Props) {
                       style={{ width: "100%", height: 265, objectFit: "cover" }}
                     />
                   )}
-                  <div className="flex justify-between items-start px-4 mb-3">
+                  <div className="flex justify-between items-start px-4 mb-3 mt-3">
                     <div className="flex-1">
                       <div>
                         <span className="text-gray-400 text-sm">NAME</span>
@@ -169,7 +169,7 @@ function NFTs({ nftList }: Props) {
                       Image Not Available
                     </p>
                   </div>
-                  <div className="p-4 mb-3">
+                  <div className="p-4 mb-3 mt-3">
                     <div className="flex-1">
                       <div>
                         <span className="text-gray-400 text-sm">NAME</span>
