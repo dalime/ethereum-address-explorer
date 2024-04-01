@@ -1,14 +1,11 @@
 // Global imports
-import React, { Key, useEffect, useState } from "react";
+import React, { Key, useState } from "react";
 import { useRecoilState } from "recoil";
 import { useMediaQuery } from "react-responsive";
 import { Tabs, Tab } from "@nextui-org/react";
 
 // Recoil
-import { ethPriceState, walletInfoState } from "@/recoil/atoms";
-
-// Actions
-import { fetchEthPrice } from "@/actions";
+import { walletInfoState } from "@/recoil/atoms";
 
 // Components
 import BalanceInfo from "./BalanceInfo";
@@ -17,20 +14,10 @@ import NFTs from "./NFTs";
 
 function MobileView() {
   const [walletInfo] = useRecoilState(walletInfoState);
-  const [, setEthPrice] = useRecoilState(ethPriceState);
 
   const isXs = useMediaQuery({ maxWidth: 320 });
 
   const [selectedTab, setSelectedTab] = useState<string>("overview");
-
-  useEffect(() => {
-    const getAndSetEthPrice = async () => {
-      const latestPrice: number | null = await fetchEthPrice();
-      if (latestPrice) setEthPrice(latestPrice);
-    };
-
-    getAndSetEthPrice();
-  }, [setEthPrice]);
 
   if (!walletInfo) return <></>;
 

@@ -142,6 +142,9 @@ const fetchAddressInfo = async (walletAddress: string) => {
       nfts: typeof walletNFTs === "string" ? [] : walletNFTs,
     };
 
+    sessionStorage.setItem("ethWalletInfo", JSON.stringify(returnObj));
+    sessionStorage.setItem("ethWalletAddress", walletAddress);
+
     return returnObj;
   } catch (error) {
     console.error('Error:', error);
