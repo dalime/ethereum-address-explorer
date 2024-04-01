@@ -62,7 +62,7 @@ function BalanceInfo({ walletBalance }: Props): JSX.Element {
           {formatETH(walletBalanceInt)}
         </span>
       </div>
-      {ethValue && (
+      {ethValue ? (
         <div className="mt-3">
           <span className="text-gray-400 text-sm">ETH VALUE</span>
           <br />
@@ -82,6 +82,8 @@ function BalanceInfo({ walletBalance }: Props): JSX.Element {
             ""
           )}
         </div>
+      ) : (
+        <></>
       )}
     </Card>
   );

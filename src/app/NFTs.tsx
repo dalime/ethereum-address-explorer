@@ -1,12 +1,12 @@
 // Global imports
 import React, { CSSProperties, useState, useEffect } from "react";
-import { Card, Image } from "@nextui-org/react";
+import { Card, Image, Button, Tooltip } from "@nextui-org/react";
 
 // Types
 import { NFTData, NFTMetadata } from "@/types";
 
 // Utils
-import { parseNFTMetadata, formatETH } from "@/utils";
+import { parseNFTMetadata, formatETH, isValidEthAddress } from "@/utils";
 
 // Images
 import PlaceholderImg from "../../public/placeholder-img.png";
@@ -32,49 +32,61 @@ const ImageWithFallback = ({
 
   // Use the onError event of a hidden img element to detect loading errors
   return (
-    <div
-      style={{
-        width: "100%",
-        height: 265,
-        position: "relative",
-        overflow: "hidden",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
+    <Tooltip
+      color="foreground"
+      content={
+        <div className="px-1 py-2">
+          <div className="text-small font-bold text-white">View full image</div>
+        </div>
+      }
     >
-      {noImage && (
-        <p
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-          }}
-        >
-          Image Not Available
-        </p>
-      )}
-      <Image
-        src={src}
-        alt={alt}
-        height={265}
+      <Button
         style={{
           width: "100%",
-          height: "auto",
-          objectFit: "cover",
+          height: 265,
+          position: "relative",
+          overflow: "hidden",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          cursor: "pointer",
           borderRadius: 0,
-          ...style,
         }}
-        onError={handleError}
-      />
-      <Image
-        src={src}
-        alt={alt}
-        onError={handleError}
-        style={{ display: "none" }}
-      />
-    </div>
+        onClick={() => (src ? (window.location.href = src) : {})}
+      >
+        {noImage && (
+          <p
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          >
+            Image Not Available
+          </p>
+        )}
+        <Image
+          src={src}
+          alt={alt}
+          height={265}
+          style={{
+            width: "100%",
+            height: "auto",
+            objectFit: "cover",
+            borderRadius: 0,
+            ...style,
+          }}
+          onError={handleError}
+        />
+        <Image
+          src={src}
+          alt={alt}
+          onError={handleError}
+          style={{ display: "none" }}
+        />
+      </Button>
+    </Tooltip>
   );
 };
 
@@ -83,21 +95,46 @@ interface Props {
 }
 
 function NFTs({ nftList }: Props) {
-  const fallbackImage = "https://example.com/path/to/fallback/image.png";
+  /**
+   * Renders view in OpenSea button
+   * @param tokenAddress string
+   * @param tokenId number
+   * @returns JSX.Element
+   */
+  const renderOpenSeaBtn = (
+    tokenAddress: string,
+    tokenId: number
+  ): JSX.Element => (
+    <Tooltip
+      color="foreground"
+      content={
+        <div className="px-1 py-2">
+          <div className="text-small font-bold text-white">View in OpenSea</div>
+        </div>
+      }
+    >
+      <Button
+        color="secondary"
+        onClick={() =>
+          (window.location.href = `https://opensea.io/assets/${tokenAddress}/${tokenId}`)
+        }
+      >
+        OpenSea
+      </Button>
+    </Tooltip>
+  );
 
   return (
     <div className="container mx-auto" style={{ marginTop: 20 }}>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         {nftList.map((nft, index) => {
-          const { name, metadata } = nft;
-          console.log("nft metadata", metadata, ", typeof", typeof metadata);
+          const { name, metadata, token_address, token_id } = nft;
           let nftMetadata: NFTMetadata | null = null;
           if (typeof metadata === "string") {
             nftMetadata = parseNFTMetadata(metadata);
           } else {
             nftMetadata = metadata as NFTMetadata;
           }
-          console.log("metadata", nftMetadata);
           return (
             // Apply min-w-[200px] to ensure a minimum width of 200px for the card
             <Card key={`nft-${index}`} className="min-w-[200px] w-full">
@@ -124,6 +161,9 @@ function NFTs({ nftList }: Props) {
                         <span className="text-white text-md font-bold">
                           {name}
                         </span>
+                      </div>
+                      <div className="mt-3">
+                        {renderOpenSeaBtn(token_address, token_id)}
                       </div>
                     </div>
                     <div className="flex-1">
@@ -155,7 +195,12 @@ function NFTs({ nftList }: Props) {
               ) : (
                 <>
                   <div
-                    style={{ width: "100%", height: 265, position: "relative" }}
+                    style={{
+                      width: "100%",
+                      height: 265,
+                      position: "relative",
+                      background: "#3f3f46",
+                    }}
                   >
                     <p
                       style={{
@@ -169,7 +214,7 @@ function NFTs({ nftList }: Props) {
                       Image Not Available
                     </p>
                   </div>
-                  <div className="p-4 mb-3 mt-3">
+                  <div className="flex justify-between items-start px-4 mb-3 mt-3">
                     <div className="flex-1">
                       <div>
                         <span className="text-gray-400 text-sm">NAME</span>
@@ -177,6 +222,9 @@ function NFTs({ nftList }: Props) {
                         <span className="text-white text-md font-bold">
                           {name}
                         </span>
+                      </div>
+                      <div className="mt-3">
+                        {renderOpenSeaBtn(token_address, token_id)}
                       </div>
                     </div>
                   </div>
