@@ -97,7 +97,11 @@ function MobileView() {
       </div>
       <div
         className={`flex min-h-screen flex-col items-center justify-start dark text-foreground bg-background`}
-        style={{ marginTop: 10, maxWidth: "calc(100vw - 3rem)" }}
+        style={{
+          marginTop: 10,
+          maxWidth: "calc(100vw - 3rem)",
+          width: selectedTab !== "nfts" ? "100%" : "auto",
+        }}
       >
         {renderInfo()}
       </div>

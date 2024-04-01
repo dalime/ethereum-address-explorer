@@ -1,6 +1,7 @@
 // Global imports
 import React, { useMemo, FormEvent } from "react";
 import { useRecoilState } from "recoil";
+import { useMediaQuery } from "react-responsive";
 import { Input, Button, Spinner } from "@nextui-org/react";
 
 // Recoil
@@ -9,9 +10,6 @@ import {
   walletAddressState,
   walletInfoState,
 } from "@/recoil/atoms";
-
-// Types
-import { Transaction, NFTData } from "@/types";
 
 // Actions
 import { fetchAddressInfo } from "@/actions";
@@ -24,10 +22,12 @@ interface Props {
   mobile?: boolean;
 }
 
-function SearchInput({ flat, mobile }: Props) {
+function SearchInput({ flat }: Props) {
   const [walletAddress, setWalletAddress] = useRecoilState(walletAddressState);
   const [loading, setLoading] = useRecoilState(loadingState);
   const [, setWalletInfo] = useRecoilState(walletInfoState);
+
+  const isTablet = useMediaQuery({ maxWidth: 1000 });
 
   /**
    * Checks if walletAddress is valid ETH address using utils
@@ -44,7 +44,7 @@ function SearchInput({ flat, mobile }: Props) {
    */
   const submitForm = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (isInvalid) return;
+    if (isInvalid || !walletAddress.length) return;
     setLoading(true);
     const walletInfo = await fetchAddressInfo(walletAddress);
     setLoading(false);
@@ -62,7 +62,7 @@ function SearchInput({ flat, mobile }: Props) {
     <Button
       type="submit"
       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition duration-200"
-      disabled={loading || isInvalid}
+      disabled={loading || isInvalid || !walletAddress.length}
       style={flat ? { marginLeft: 10 } : {}}
     >
       {loading ? <Spinner /> : "Explore"}
@@ -75,6 +75,7 @@ function SearchInput({ flat, mobile }: Props) {
         flat ? "row" : "col"
       } gap-4rounded-lg shadow-lg w-full`}
       onSubmit={submitForm}
+      style={{ maxWidth: 500 }}
     >
       <div className={`py-2 ${flat ? "flex justify-center align-center" : ""}`}>
         {!flat && (
@@ -94,6 +95,7 @@ function SearchInput({ flat, mobile }: Props) {
           value={walletAddress}
           onChange={(e) => setWalletAddress(e.target.value)}
           disabled={loading}
+          style={{ minWidth: 230 }}
         />
 
         {flat && renderSubmitBtn()}

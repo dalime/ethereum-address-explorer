@@ -38,6 +38,9 @@ const ImageWithFallback = ({
         height: 265,
         position: "relative",
         overflow: "hidden",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
       {noImage && (

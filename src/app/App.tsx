@@ -45,7 +45,7 @@ function App() {
       {walletInfo ? <Navigation /> : <></>}
       <main
         className={`flex min-h-screen flex-col items-center justify-${
-          isMobile ? "start" : "center"
+          isMobile && walletInfo ? "start" : "center"
         } dark text-foreground bg-background`}
         style={{
           paddingLeft: `${
