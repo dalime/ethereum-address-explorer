@@ -1,6 +1,7 @@
 // Global imports
 import React, { Key, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
+import { useMediaQuery } from "react-responsive";
 import { Tabs, Tab } from "@nextui-org/react";
 
 // Recoil
@@ -17,6 +18,8 @@ import NFTs from "./NFTs";
 function MobileView() {
   const [walletInfo] = useRecoilState(walletInfoState);
   const [, setEthPrice] = useRecoilState(ethPriceState);
+
+  const isXs = useMediaQuery({ maxWidth: 320 });
 
   const [selectedTab, setSelectedTab] = useState<string>("overview");
 
@@ -87,9 +90,9 @@ function MobileView() {
             marginBottom: 5,
           }}
         >
-          <Tab key="overview" title="Overview" />
-          <Tab key="transactions" title="Transactions" />
-          <Tab key="nfts" title="NFTs" />
+          <Tab key="overview" title={isXs ? "Info" : "Overview"} />
+          <Tab key="transactions" title={isXs ? "Trans..." : "Transactions"} />
+          <Tab key="nfts" title={isXs ? "NFT" : "NFTs"} />
         </Tabs>
       </div>
       <div
