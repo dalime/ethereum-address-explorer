@@ -59,7 +59,7 @@ function MobileView() {
             <ClientTransactions transactions={walletInfo.transactions} />
             {walletInfo.transactions.length >= 20 ? (
               <p className="text-white text-sm text-center mt-3">
-                Showing first 20 transactions
+                Showing last 20 transactions
                 <Tooltip
                   color="foreground"
                   content={
