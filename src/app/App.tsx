@@ -17,6 +17,7 @@ import MobileView from "./MobileView";
 import BalanceInfo from "./BalanceInfo";
 import TransactionsTable from "./TransactionsTable";
 import NFTs from "./NFTs";
+import LoadingMessage from "./LoadingMessage";
 
 // Images
 import EthLogo from "../../public/eth-logo.png";
@@ -77,7 +78,7 @@ function App() {
         )}
 
         {loading ? (
-          <></>
+          <LoadingMessage />
         ) : walletInfo ? (
           !isSmall ? (
             <Accordion defaultExpandedKeys={["1"]}>
