@@ -33,7 +33,9 @@ function MobileView() {
         return walletInfo.balance ? (
           <BalanceInfo walletBalance={walletInfo.balance} />
         ) : (
-          <></>
+          <p className="text-sm text-white text-center">
+            Overview not available
+          </p>
         );
       case "transactions":
         return walletInfo.transactions && walletInfo.transactions.length ? (
@@ -68,13 +70,17 @@ function MobileView() {
             )}
           </>
         ) : (
-          <></>
+          <p className="text-sm text-white text-center">
+            This wallet has no recorded transactions
+          </p>
         );
       case "nfts":
         return walletInfo.nfts.length ? (
           <NFTs nftList={walletInfo.nfts} />
         ) : (
-          <></>
+          <p className="text-sm text-white text-center">
+            This wallet has no recorded transactions
+          </p>
         );
       default:
         return <></>;

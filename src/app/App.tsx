@@ -137,8 +137,12 @@ function App() {
               }}
             >
               <AccordionItem key="1" aria-label="Accordion 1" title="Overview">
-                {walletInfo.balance && (
+                {walletInfo.balance ? (
                   <BalanceInfo walletBalance={walletInfo.balance} />
+                ) : (
+                  <p className="text-sm text-white text-center">
+                    Overview not available
+                  </p>
                 )}
               </AccordionItem>
               <AccordionItem
@@ -178,14 +182,18 @@ function App() {
                     )}
                   </>
                 ) : (
-                  <></>
+                  <p className="text-sm text-white text-center">
+                    This wallet has no recorded transactions
+                  </p>
                 )}
               </AccordionItem>
               <AccordionItem key="3" aria-label="Accordion 3" title="NFTs">
                 {walletInfo.nfts.length ? (
                   <NFTs nftList={walletInfo.nfts} />
                 ) : (
-                  <></>
+                  <p className="text-sm text-white text-center">
+                    This wallet does not have any NFTs
+                  </p>
                 )}
               </AccordionItem>
             </Accordion>
