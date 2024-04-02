@@ -44,6 +44,7 @@ const ImageWithFallback = ({
         style={{
           width: "100%",
           height: "100%",
+          maxHeight: 265,
           position: "relative",
           overflow: "hidden",
           display: "flex",
@@ -55,6 +56,7 @@ const ImageWithFallback = ({
           paddingRight: 0,
           margin: 0,
           marginRight: 0,
+          gap: "initial",
         }}
         onClick={() => (src ? (window.location.href = src) : {})}
       >
@@ -149,7 +151,7 @@ function NFTs({ nftList }: Props) {
 
   return (
     <div className="container mx-auto" style={{ marginTop: 20 }}>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {nftList.map((nft, index) => {
           const { name, metadata, token_address, token_id } = nft;
           let nftMetadata: NFTMetadata | null = null;
