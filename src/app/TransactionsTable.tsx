@@ -67,7 +67,7 @@ interface Props {
 
 function TransactionsTable({ transactions }: Props) {
   const [, setLoading] = useRecoilState(loadingState);
-  const [, setWalletInfo] = useRecoilState(walletInfoState);
+  const [walletInfo, setWalletInfo] = useRecoilState(walletInfoState);
 
   /**
    * Submits the form
@@ -83,9 +83,14 @@ function TransactionsTable({ transactions }: Props) {
     }
   };
 
+  const transactionsLength = transactions.length;
+  const firstTwentyTransactions =
+    transactionsLength > 20 ? transactions.slice(0, 20) : transactions;
+
   return (
     <Table style={{ marginBottom: 20 }}>
       <TableHeader>
+        <TableColumn>#</TableColumn>
         <TableColumn>Transaction Hash</TableColumn>
         <TableColumn>Block</TableColumn>
         <TableColumn>Age</TableColumn>
@@ -95,7 +100,7 @@ function TransactionsTable({ transactions }: Props) {
         <TableColumn>Gas Fee</TableColumn>
       </TableHeader>
       <TableBody>
-        {transactions.map((transaction) => {
+        {firstTwentyTransactions.map((transaction, index) => {
           const {
             blockNumber,
             timeStamp,
@@ -117,6 +122,11 @@ function TransactionsTable({ transactions }: Props) {
 
           return (
             <TableRow key={`transaction-${hash}`}>
+              <TableCell>
+                {walletInfo && walletInfo.transactionsPage
+                  ? (walletInfo.transactionsPage - 1) * 20 + index + 1
+                  : index + 1}
+              </TableCell>
               <TableCell>
                 <LinkBtn
                   func={() =>
