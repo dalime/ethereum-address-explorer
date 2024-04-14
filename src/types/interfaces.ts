@@ -24,6 +24,7 @@ export interface Transaction {
 export interface WalletInfo {
   balance: string | null;
   transactions: Transaction[];
+  transactionsPage: number;
   nfts: NFTData[];
 }
 

@@ -52,11 +52,12 @@ const fetchWalletBalance = async (walletAddress: string) => {
 /**
  * Fetches the transaction history for an Ethereum wallet address using Etherscan
  * @param walletAddress string
+ * @param page number | undefined
  * @returns string | null
  */
-const fetchWalletTransactions = async (walletAddress: string) => {
+const fetchWalletTransactions = async (walletAddress: string, page?: number) => {
   try {
-      const response = await fetch(`https://api.etherscan.io/api?module=account&action=txlist&address=${walletAddress}&sort=desc&page=1&offset=20&apikey=${process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY}`, {
+      const response = await fetch(`https://api.etherscan.io/api?module=account&action=txlist&address=${walletAddress}&sort=desc&page=${page || 1}&offset=21&apikey=${process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -139,6 +140,7 @@ const fetchAddressInfo = async (walletAddress: string) => {
     const returnObj: WalletInfo = {
       balance: walletBalance || null,
       transactions: Array.isArray(walletTransactions) ? walletTransactions : [],
+      transactionsPage: 1,
       nfts: Array.isArray(walletNFTs) ? walletNFTs : [],
     };
 
@@ -156,4 +158,5 @@ const fetchAddressInfo = async (walletAddress: string) => {
 export {
   fetchAddressInfo,
   fetchEthPrice,
+  fetchWalletTransactions,
 }

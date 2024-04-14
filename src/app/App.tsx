@@ -12,7 +12,7 @@ import {
   Link,
   Selection,
   Button,
-  Tooltip,
+  Spinner,
 } from "@nextui-org/react";
 
 // Recoiil
@@ -21,22 +21,27 @@ import {
   loadingState,
   walletInfoState,
   walletAddressState,
+  transactionsLoadingState,
 } from "@/recoil/atoms";
 
 // Actions
-import { fetchEthPrice } from "@/actions";
+import { fetchEthPrice, fetchWalletTransactions } from "@/actions";
 
 // Components
 import Navigation from "./Navigation";
 import SearchInput from "./SearchInput";
-import MobileView from "./MobileView";
+// import MobileView from "./MobileView";
 import BalanceInfo from "./BalanceInfo";
-import TransactionsTable from "./TransactionsTable";
-import NFTs from "./NFTs";
+// import TransactionsTable from "./TransactionsTable";
+// import NFTs from "./NFTs";
 import LoadingMessage from "./LoadingMessage";
+
+// Assets
+import { ChevronDoubleLeft, ChevronLeft, ChevronRight } from "@/assets";
 
 // Images
 import EthLogo from "../../public/eth-logo.png";
+import { Transaction } from "@/types";
 
 const ClientMobileView = dynamic(() => import("./MobileView"), {
   ssr: false,
@@ -52,7 +57,10 @@ const ClientTransactions = dynamic(() => import("./TransactionsTable"), {
 
 function App() {
   const [loading] = useRecoilState(loadingState);
-  const [walletInfo] = useRecoilState(walletInfoState);
+  const [transactionsLoading, setTransactionsLoading] = useRecoilState(
+    transactionsLoadingState
+  );
+  const [walletInfo, setWalletInfo] = useRecoilState(walletInfoState);
   const [, setEthPrice] = useRecoilState(ethPriceState);
   const walletAddressInitial = useRecoilValue(walletAddressState); // Capture the initial state
   const walletAddressRef = useRef(walletAddressInitial); // Use useRef to hold the initial value
@@ -83,6 +91,37 @@ function App() {
 
     getAndSetEthPrice();
   }, [setEthPrice]);
+
+  /**
+   * Handles fetching transactions with the next or previous page
+   * @param next boolean
+   * @param first boolean | undefined
+   */
+  const clickPageButton = async (next: boolean, first?: boolean) => {
+    if (walletInfo && walletAddressInitial) {
+      const pageNum: number = first
+        ? 1
+        : next
+        ? walletInfo.transactionsPage + 1
+        : walletInfo.transactionsPage - 1;
+      if (pageNum) {
+        setTransactionsLoading(true);
+        const newPage = (await fetchWalletTransactions(
+          walletAddressInitial,
+          pageNum
+        )) as Transaction[];
+        const newWalletInfo = {
+          ...walletInfo,
+          transactions: newPage,
+          transactionsPage: pageNum,
+        };
+        setWalletInfo(newWalletInfo);
+        setTransactionsLoading(false);
+      }
+    }
+  };
+
+  const transactionsLength = walletInfo ? walletInfo.transactions.length : 0;
 
   return (
     <div className="flex flex-col min-h-screen dark text-foreground bg-background">
@@ -163,30 +202,64 @@ function App() {
                       <ClientTransactions
                         transactions={walletInfo.transactions}
                       />
-                      {walletInfo.transactions.length >= 20 ? (
-                        <p className="text-white text-sm text-center mt-3">
-                          Showing last 20 transactions{" "}
-                          <Tooltip
-                            color="foreground"
-                            content={
-                              <div className="px-1 py-2">
-                                <div className="text-small font-bold text-white">
-                                  View in Etherscan
-                                </div>
-                              </div>
-                            }
-                          >
+                      {walletInfo.transactionsPage > 1 ||
+                      walletInfo.transactions.length > 20 ? (
+                        <div className="flex flex-row justify-center items-center mt-10 mb-10">
+                          {walletInfo.transactions &&
+                          walletInfo.transactionsPage > 2 ? (
                             <Button
-                              onClick={() =>
-                                (window.location.href = `https://etherscan.io/address/${walletAddressRef.current}`)
-                              }
-                              color="primary"
-                              style={{ marginLeft: 5 }}
+                              className="mr-10"
+                              onClick={() => clickPageButton(false, true)}
+                              disabled={loading || transactionsLoading}
                             >
-                              View All
+                              <ChevronDoubleLeft />
                             </Button>
-                          </Tooltip>
-                        </p>
+                          ) : (
+                            <></>
+                          )}
+                          {walletInfo.transactions &&
+                          walletInfo.transactionsPage > 1 ? (
+                            <Button
+                              className="mr-10"
+                              onClick={() => clickPageButton(false)}
+                              disabled={loading || transactionsLoading}
+                            >
+                              <ChevronLeft />
+                            </Button>
+                          ) : (
+                            <></>
+                          )}
+                          {walletInfo && walletInfo.transactionsPage ? (
+                            transactionsLoading ? (
+                              <Spinner />
+                            ) : (
+                              <label>
+                                {walletInfo.transactionsPage > 1
+                                  ? `${
+                                      (walletInfo.transactionsPage - 1) * 20 + 1
+                                    } -
+                                    ${
+                                      (walletInfo.transactionsPage - 1) * 20 +
+                                      Math.min(transactionsLength, 20)
+                                    }`
+                                  : `1 - ${Math.min(transactionsLength, 20)}`}
+                              </label>
+                            )
+                          ) : (
+                            <></>
+                          )}
+                          {transactionsLength > 20 ? (
+                            <Button
+                              className="ml-10"
+                              onClick={() => clickPageButton(true)}
+                              disabled={loading || transactionsLoading}
+                            >
+                              <ChevronRight />
+                            </Button>
+                          ) : (
+                            <></>
+                          )}
+                        </div>
                       ) : (
                         <></>
                       )}
