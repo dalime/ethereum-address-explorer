@@ -11,8 +11,6 @@ import {
   AccordionItem,
   Link,
   Selection,
-  Button,
-  Spinner,
 } from "@nextui-org/react";
 
 // Recoiil
@@ -21,11 +19,10 @@ import {
   loadingState,
   walletInfoState,
   walletAddressState,
-  transactionsLoadingState,
 } from "@/recoil/atoms";
 
 // Actions
-import { fetchEthPrice, fetchWalletTransactions } from "@/actions";
+import { fetchEthPrice } from "@/actions";
 
 // Components
 import Navigation from "./Navigation";
@@ -35,13 +32,10 @@ import BalanceInfo from "./BalanceInfo";
 // import TransactionsTable from "./TransactionsTable";
 // import NFTs from "./NFTs";
 import LoadingMessage from "./LoadingMessage";
-
-// Assets
-import { ChevronDoubleLeft, ChevronLeft, ChevronRight } from "@/assets";
+import TransactionsPagination from "./TransactionsPagination";
 
 // Images
 import EthLogo from "../../public/eth-logo.png";
-import { Transaction } from "@/types";
 
 const ClientMobileView = dynamic(() => import("./MobileView"), {
   ssr: false,
@@ -57,10 +51,7 @@ const ClientTransactions = dynamic(() => import("./TransactionsTable"), {
 
 function App() {
   const [loading] = useRecoilState(loadingState);
-  const [transactionsLoading, setTransactionsLoading] = useRecoilState(
-    transactionsLoadingState
-  );
-  const [walletInfo, setWalletInfo] = useRecoilState(walletInfoState);
+  const [walletInfo] = useRecoilState(walletInfoState);
   const [, setEthPrice] = useRecoilState(ethPriceState);
   const walletAddressInitial = useRecoilValue(walletAddressState); // Capture the initial state
   const walletAddressRef = useRef(walletAddressInitial); // Use useRef to hold the initial value
@@ -91,37 +82,6 @@ function App() {
 
     getAndSetEthPrice();
   }, [setEthPrice]);
-
-  /**
-   * Handles fetching transactions with the next or previous page
-   * @param next boolean
-   * @param first boolean | undefined
-   */
-  const clickPageButton = async (next: boolean, first?: boolean) => {
-    if (walletInfo && walletAddressInitial) {
-      const pageNum: number = first
-        ? 1
-        : next
-        ? walletInfo.transactionsPage + 1
-        : walletInfo.transactionsPage - 1;
-      if (pageNum) {
-        setTransactionsLoading(true);
-        const newPage = (await fetchWalletTransactions(
-          walletAddressInitial,
-          pageNum
-        )) as Transaction[];
-        const newWalletInfo = {
-          ...walletInfo,
-          transactions: newPage,
-          transactionsPage: pageNum,
-        };
-        setWalletInfo(newWalletInfo);
-        setTransactionsLoading(false);
-      }
-    }
-  };
-
-  const transactionsLength = walletInfo ? walletInfo.transactions.length : 0;
 
   return (
     <div className="flex flex-col min-h-screen dark text-foreground bg-background">
@@ -202,67 +162,7 @@ function App() {
                       <ClientTransactions
                         transactions={walletInfo.transactions}
                       />
-                      {walletInfo.transactionsPage > 1 ||
-                      walletInfo.transactions.length > 20 ? (
-                        <div className="flex flex-row justify-center items-center mt-10 mb-10">
-                          {walletInfo.transactions &&
-                          walletInfo.transactionsPage > 2 ? (
-                            <Button
-                              className="mr-10"
-                              onClick={() => clickPageButton(false, true)}
-                              disabled={loading || transactionsLoading}
-                            >
-                              <ChevronDoubleLeft />
-                            </Button>
-                          ) : (
-                            <></>
-                          )}
-                          {walletInfo.transactions &&
-                          walletInfo.transactionsPage > 1 ? (
-                            <Button
-                              className="mr-10"
-                              onClick={() => clickPageButton(false)}
-                              disabled={loading || transactionsLoading}
-                            >
-                              <ChevronLeft />
-                            </Button>
-                          ) : (
-                            <></>
-                          )}
-                          {walletInfo && walletInfo.transactionsPage ? (
-                            transactionsLoading ? (
-                              <Spinner />
-                            ) : (
-                              <label>
-                                {walletInfo.transactionsPage > 1
-                                  ? `${
-                                      (walletInfo.transactionsPage - 1) * 20 + 1
-                                    } -
-                                    ${
-                                      (walletInfo.transactionsPage - 1) * 20 +
-                                      Math.min(transactionsLength, 20)
-                                    }`
-                                  : `1 - ${Math.min(transactionsLength, 20)}`}
-                              </label>
-                            )
-                          ) : (
-                            <></>
-                          )}
-                          {transactionsLength > 20 ? (
-                            <Button
-                              className="ml-10"
-                              onClick={() => clickPageButton(true)}
-                              disabled={loading || transactionsLoading}
-                            >
-                              <ChevronRight />
-                            </Button>
-                          ) : (
-                            <></>
-                          )}
-                        </div>
-                      ) : (
-                        <></>
-                      )}
+                      <TransactionsPagination />
                     </>
                   ) : (
                     <p className="text-sm text-white text-center">

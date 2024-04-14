@@ -10,8 +10,9 @@ import { walletInfoState, walletAddressState } from "@/recoil/atoms";
 
 // Components
 import BalanceInfo from "./BalanceInfo";
-import TransactionsTable from "./TransactionsTable";
-import NFTs from "./NFTs";
+// import TransactionsTable from "./TransactionsTable";
+// import NFTs from "./NFTs";
+import TransactionsPagination from "./TransactionsPagination";
 
 const ClientNFTs = dynamic(() => import("./NFTs"), {
   ssr: false,
@@ -57,33 +58,7 @@ function MobileView() {
         return walletInfo.transactions && walletInfo.transactions.length ? (
           <>
             <ClientTransactions transactions={walletInfo.transactions} />
-            {walletInfo.transactions.length >= 20 ? (
-              <p className="text-white text-sm text-center mt-3">
-                Showing last 20 transactions
-                <Tooltip
-                  color="foreground"
-                  content={
-                    <div className="px-1 py-2">
-                      <div className="text-small font-bold text-white">
-                        View in Etherscan
-                      </div>
-                    </div>
-                  }
-                >
-                  <Button
-                    onClick={() =>
-                      (window.location.href = `https://etherscan.io/address/${walletAddressRef.current}`)
-                    }
-                    color="primary"
-                    style={{ marginLeft: 5 }}
-                  >
-                    View All
-                  </Button>
-                </Tooltip>
-              </p>
-            ) : (
-              <></>
-            )}
+            <TransactionsPagination />
           </>
         ) : (
           <p className="text-sm text-white text-center">
