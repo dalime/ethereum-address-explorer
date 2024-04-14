@@ -65,14 +65,11 @@ function App() {
   const lastSelectedTab = sessionStorage.getItem("lastSelectedTab");
   let lastSelectedIndex: string = "";
   switch (lastSelectedTab) {
-    case "overview":
+    case "transactions":
       lastSelectedIndex = "1";
       break;
-    case "transactions":
-      lastSelectedIndex = "2";
-      break;
     case "nfts":
-      lastSelectedIndex = "3";
+      lastSelectedIndex = "2";
       break;
     default:
       break;
@@ -129,91 +126,88 @@ function App() {
           <LoadingMessage />
         ) : walletInfo ? (
           !isSmall ? (
-            <Accordion
-              defaultExpandedKeys={[lastSelectedIndex || "1"]}
-              onSelectionChange={(key: Selection) => {
-                const keyValue = (key.valueOf() as any)["currentKey"];
-                let sessionValue = "";
-                console.log("keyValue", keyValue);
-                switch (keyValue) {
-                  case "1":
-                    sessionValue = "overview";
-                    break;
-                  case "2":
-                    sessionValue = "transactions";
-                    break;
-                  case "3":
-                    sessionValue = "nfts";
-                    break;
-                  default:
-                    break;
-                }
-                sessionStorage.setItem("lastSelectedTab", sessionValue);
-              }}
-            >
-              <AccordionItem key="1" aria-label="Accordion 1" title="Overview">
-                {walletInfo.balance ? (
-                  <BalanceInfo walletBalance={walletInfo.balance} />
-                ) : (
-                  <p className="text-sm text-white text-center">
-                    Overview not available
-                  </p>
-                )}
-              </AccordionItem>
-              <AccordionItem
-                key="2"
-                aria-label="Accordion 2"
-                title="Transactions"
+            <>
+              {walletInfo.balance ? (
+                <BalanceInfo walletBalance={walletInfo.balance} />
+              ) : (
+                <p className="text-sm text-white text-center">
+                  Overview not available
+                </p>
+              )}
+              <Accordion
+                defaultExpandedKeys={[lastSelectedIndex || "1"]}
+                onSelectionChange={(key: Selection) => {
+                  const keyValue = (key.valueOf() as any)["currentKey"];
+                  let sessionValue = "";
+                  console.log("keyValue", keyValue);
+                  switch (keyValue) {
+                    case "1":
+                      sessionValue = "transactions";
+                      break;
+                    case "2":
+                      sessionValue = "nfts";
+                      break;
+                    default:
+                      break;
+                  }
+                  sessionStorage.setItem("lastSelectedTab", sessionValue);
+                }}
               >
-                {walletInfo && walletInfo.transactions.length ? (
-                  <>
-                    <ClientTransactions
-                      transactions={walletInfo.transactions}
-                    />
-                    {walletInfo.transactions.length >= 20 ? (
-                      <p className="text-white text-sm text-center mt-3">
-                        Showing last 20 transactions{" "}
-                        <Tooltip
-                          color="foreground"
-                          content={
-                            <div className="px-1 py-2">
-                              <div className="text-small font-bold text-white">
-                                View in Etherscan
+                <AccordionItem
+                  key="1"
+                  aria-label="Accordion 2"
+                  title="Transactions"
+                >
+                  {walletInfo && walletInfo.transactions.length ? (
+                    <>
+                      <ClientTransactions
+                        transactions={walletInfo.transactions}
+                      />
+                      {walletInfo.transactions.length >= 20 ? (
+                        <p className="text-white text-sm text-center mt-3">
+                          Showing last 20 transactions{" "}
+                          <Tooltip
+                            color="foreground"
+                            content={
+                              <div className="px-1 py-2">
+                                <div className="text-small font-bold text-white">
+                                  View in Etherscan
+                                </div>
                               </div>
-                            </div>
-                          }
-                        >
-                          <Button
-                            onClick={() =>
-                              (window.location.href = `https://etherscan.io/address/${walletAddressRef.current}`)
                             }
-                            color="primary"
-                            style={{ marginLeft: 5 }}
                           >
-                            View All
-                          </Button>
-                        </Tooltip>
-                      </p>
-                    ) : (
-                      <></>
-                    )}
-                  </>
-                ) : (
-                  <p className="text-sm text-white text-center">
-                    This wallet has no recorded transactions
-                  </p>
-                )}
-              </AccordionItem>
-              <AccordionItem key="3" aria-label="Accordion 3" title="NFTs">
-                {walletInfo.nfts.length ? (
-                  <ClientNFTs nftList={walletInfo.nfts} />
-                ) : (
-                  <p className="text-sm text-white text-center">
-                    This wallet does not have any NFTs
-                  </p>
-                )}
-              </AccordionItem>
-            </Accordion>
+                            <Button
+                              onClick={() =>
+                                (window.location.href = `https://etherscan.io/address/${walletAddressRef.current}`)
+                              }
+                              color="primary"
+                              style={{ marginLeft: 5 }}
+                            >
+                              View All
+                            </Button>
+                          </Tooltip>
+                        </p>
+                      ) : (
+                        <></>
+                      )}
+                    </>
+                  ) : (
+                    <p className="text-sm text-white text-center">
+                      This wallet has no recorded transactions
+                    </p>
+                  )}
+                </AccordionItem>
+                <AccordionItem key="2" aria-label="Accordion 3" title="NFTs">
+                  {walletInfo.nfts.length ? (
+                    <ClientNFTs nftList={walletInfo.nfts} />
+                  ) : (
+                    <p className="text-sm text-white text-center">
+                      This wallet does not have any NFTs
+                    </p>
+                  )}
+                </AccordionItem>
+              </Accordion>
+            </>
           ) : (
             <ClientMobileView />
           )
