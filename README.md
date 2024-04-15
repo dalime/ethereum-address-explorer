@@ -1,4 +1,12 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is an Ethereum Address Explorer that shows information about an Ethereum Address, showing:
+
+- Balance
+- Transactions
+- NFTs
+
+It mocks [Etherscan](https://etherscan.io) for transactions and [OpenSea](https://opensea.io) for NFT details.
+
+It is bootstrapped with [Next.js](https://nextjs.org/) and [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
 
