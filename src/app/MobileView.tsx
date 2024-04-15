@@ -16,6 +16,9 @@ import BalanceInfo from "./BalanceInfo";
 // Utils
 import { scrollToTop } from "@/utils";
 
+// Assets
+import { ImageIcon, Info, TableIcon } from "@/assets";
+
 const ClientNFTs = dynamic(() => import("./NFTs"), {
   ssr: false,
 });
@@ -109,9 +112,12 @@ function MobileView() {
             marginBottom: 5,
           }}
         >
-          <Tab key="overview" title={isXs ? "Info" : "Overview"} />
-          <Tab key="transactions" title={isXs ? "Trans..." : "Transactions"} />
-          <Tab key="nfts" title={isXs ? "NFT" : "NFTs"} />
+          <Tab key="overview" title={isXs ? <Info /> : "Overview"} />
+          <Tab
+            key="transactions"
+            title={isXs ? <TableIcon /> : "Transactions"}
+          />
+          <Tab key="nfts" title={isXs ? <ImageIcon /> : "NFTs"} />
         </Tabs>
       </div>
       <div
