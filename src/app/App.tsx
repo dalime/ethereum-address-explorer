@@ -2,7 +2,7 @@
 
 // Global imports
 import dynamic from "next/dynamic";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { useRecoilState } from "recoil";
 import { useMediaQuery } from "react-responsive";
 import {
@@ -48,10 +48,6 @@ function App() {
   const [loading] = useRecoilState(loadingState);
   const [walletInfo] = useRecoilState(walletInfoState);
   const [, setEthPrice] = useRecoilState(ethPriceState);
-  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
-  const scrollTargetRef = useRef<HTMLDivElement | HTMLParagraphElement | null>(
-    null
-  );
 
   const isSmall = useMediaQuery({ maxWidth: 640 });
   const isMobile = useMediaQuery({ maxWidth: 768 });
@@ -116,7 +112,6 @@ function App() {
           position: isMobile ? "relative" : "initial",
           paddingBottom: 40,
         }}
-        ref={scrollContainerRef}
       >
         {walletInfo ? (
           <></>
@@ -144,10 +139,7 @@ function App() {
               {walletInfo.balance ? (
                 <BalanceInfo walletBalance={walletInfo.balance} />
               ) : (
-                <p
-                  ref={scrollTargetRef}
-                  className="text-sm text-white text-center"
-                >
+                <p className="text-sm text-white text-center">
                   Overview not available
                 </p>
               )}
