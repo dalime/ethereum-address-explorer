@@ -1,18 +1,21 @@
 // Global imports
 import dynamic from "next/dynamic";
-import React, { Key, useState, useRef, useEffect } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import React, { Key, useState, useEffect } from "react";
+import { useRecoilState } from "recoil";
 import { useMediaQuery } from "react-responsive";
-import { Tabs, Tab, Button, Tooltip } from "@nextui-org/react";
+import { Tabs, Tab } from "@nextui-org/react";
 
 // Recoil
-import { walletInfoState, walletAddressState } from "@/recoil/atoms";
+import { walletInfoState } from "@/recoil/atoms";
 
 // Components
 import BalanceInfo from "./BalanceInfo";
 // import TransactionsTable from "./TransactionsTable";
 // import NFTs from "./NFTs";
 import TransactionsPagination from "./TransactionsPagination";
+
+// Utils
+import { scrollToTop } from "@/utils";
 
 const ClientNFTs = dynamic(() => import("./NFTs"), {
   ssr: false,
@@ -24,9 +27,6 @@ const ClientTransactions = dynamic(() => import("./TransactionsTable"), {
 
 function MobileView() {
   const [walletInfo] = useRecoilState(walletInfoState);
-  const walletAddressInitial = useRecoilValue(walletAddressState); // Capture the initial state
-  const walletAddressRef = useRef(walletAddressInitial); // Use useRef to hold the initial value
-
   const isXs = useMediaQuery({ maxWidth: 320 });
 
   const lastSelectedTab = sessionStorage.getItem("lastSelectedTab");
@@ -78,8 +78,13 @@ function MobileView() {
     }
   };
 
+  /**
+   * When the user taps on a tab
+   * @param newTab Key
+   */
   const updateTab = (newTab: Key): void => {
     const stringRep = newTab.toString();
+    scrollToTop();
     setSelectedTab(stringRep);
     sessionStorage.setItem("lastSelectedTab", stringRep);
   };

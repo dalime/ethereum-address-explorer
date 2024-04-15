@@ -61,7 +61,7 @@ function TransactionsPagination() {
   };
 
   const transactionsLength = walletInfo ? walletInfo.transactions.length : 0;
-  const marginClass = `mr-${isSmall ? 5 : 10}`;
+  const marginStyle = { marginRight: isSmall ? 5 : 10 };
 
   return (
     <>
@@ -72,7 +72,7 @@ function TransactionsPagination() {
           walletInfo.transactionsPage > 2 &&
           !isExtraSmall ? (
             <Button
-              className={marginClass}
+              style={marginStyle}
               onClick={() => clickPageButton(false, true)}
               disabled={loading || transactionsLoading}
             >
@@ -83,10 +83,13 @@ function TransactionsPagination() {
           )}
           {walletInfo.transactions && walletInfo.transactionsPage > 1 ? (
             <Button
-              className={marginClass}
               onClick={() => clickPageButton(false)}
               disabled={loading || transactionsLoading}
-              style={isSmall ? { minWidth: "fit-content" } : {}}
+              style={
+                isSmall
+                  ? { ...marginStyle, minWidth: "fit-content" }
+                  : marginStyle
+              }
             >
               <ChevronLeft />
             </Button>
@@ -95,9 +98,12 @@ function TransactionsPagination() {
           )}
           {walletInfo && walletInfo.transactionsPage ? (
             transactionsLoading ? (
-              <Spinner className={marginClass} />
+              <Spinner style={marginStyle} />
             ) : (
-              <label className={`${marginClass}${isSmall ? " text-sm" : ""}`}>
+              <label
+                className={`${isSmall ? " text-sm" : ""}`}
+                style={marginStyle}
+              >
                 {walletInfo.transactionsPage > 1
                   ? `${(walletInfo.transactionsPage - 1) * 20 + 1} -
                     ${

@@ -2,8 +2,8 @@
 
 // Global imports
 import dynamic from "next/dynamic";
-import React, { useEffect, useRef } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import React, { useEffect } from "react";
+import { useRecoilState } from "recoil";
 import { useMediaQuery } from "react-responsive";
 import {
   Image,
@@ -11,15 +11,11 @@ import {
   AccordionItem,
   Link,
   Selection,
+  Button,
 } from "@nextui-org/react";
 
 // Recoiil
-import {
-  ethPriceState,
-  loadingState,
-  walletInfoState,
-  walletAddressState,
-} from "@/recoil/atoms";
+import { ethPriceState, loadingState, walletInfoState } from "@/recoil/atoms";
 
 // Actions
 import { fetchEthPrice } from "@/actions";
@@ -33,6 +29,7 @@ import BalanceInfo from "./BalanceInfo";
 // import NFTs from "./NFTs";
 import LoadingMessage from "./LoadingMessage";
 import TransactionsPagination from "./TransactionsPagination";
+import { ChevronUp } from "@/assets";
 
 // Images
 import EthLogo from "../../public/eth-logo.png";
@@ -53,8 +50,6 @@ function App() {
   const [loading] = useRecoilState(loadingState);
   const [walletInfo] = useRecoilState(walletInfoState);
   const [, setEthPrice] = useRecoilState(ethPriceState);
-  const walletAddressInitial = useRecoilValue(walletAddressState); // Capture the initial state
-  const walletAddressRef = useRef(walletAddressInitial); // Use useRef to hold the initial value
 
   const isSmall = useMediaQuery({ maxWidth: 640 });
   const isMobile = useMediaQuery({ maxWidth: 768 });
@@ -83,9 +78,43 @@ function App() {
     getAndSetEthPrice();
   }, [setEthPrice]);
 
+  /**
+   * Scroll to the top of the main element
+   * @param delay boolean | undefined
+   */
+  const scrollToTop = (delay?: boolean) => {
+    setTimeout(
+      () => {
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: "smooth", // Optional: Defines the transition animation.
+        });
+      },
+      delay ? 300 : 0
+    );
+  };
+
   return (
     <div className="flex flex-col min-h-screen dark text-foreground bg-background">
-      {walletInfo ? <Navigation /> : <></>}
+      {walletInfo ? <Navigation scrollToTop={() => scrollToTop()} /> : <></>}
+      {loading ? (
+        <></>
+      ) : (
+        <Button
+          color="primary"
+          style={{
+            position: "sticky",
+            top: "calc(100vh - 70px)",
+            left: "calc(100vw - 90px)",
+            cursor: "pointer",
+            zIndex: 9,
+          }}
+          onClick={() => scrollToTop()}
+        >
+          <ChevronUp />
+        </Button>
+      )}
       <main
         className={`flex flex-col items-center justify-${
           isMobile && walletInfo ? "start" : "center"
@@ -138,7 +167,7 @@ function App() {
                 onSelectionChange={(key: Selection) => {
                   const keyValue = (key.valueOf() as any)["currentKey"];
                   let sessionValue = "";
-                  console.log("keyValue", keyValue);
+                  scrollToTop(true);
                   switch (keyValue) {
                     case "1":
                       sessionValue = "transactions";
@@ -154,7 +183,7 @@ function App() {
               >
                 <AccordionItem
                   key="1"
-                  aria-label="Accordion 2"
+                  aria-label="Accordian Transactions"
                   title="Transactions"
                 >
                   {walletInfo && walletInfo.transactions.length ? (
@@ -170,7 +199,7 @@ function App() {
                     </p>
                   )}
                 </AccordionItem>
-                <AccordionItem key="2" aria-label="Accordion 3" title="NFTs">
+                <AccordionItem key="2" aria-label="Accordion NFTs" title="NFTs">
                   {walletInfo.nfts.length ? (
                     <ClientNFTs nftList={walletInfo.nfts} />
                   ) : (

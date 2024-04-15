@@ -52,3 +52,20 @@ export const capitalizeFirstLetterOfEachWord = (input: string): string => {
     )
     .join(' '); 
 }
+
+/**
+   * Scroll to the top of the main element
+   * @param delay boolean | undefined
+   */
+export const scrollToTop = (delay?: boolean) => {
+  setTimeout(
+    () => {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "smooth", // Optional: Defines the transition animation.
+      });
+    },
+    delay ? 300 : 0
+  );
+};

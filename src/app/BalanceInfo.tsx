@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, Ref } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useMediaQuery } from "react-responsive";
 import { Card, Image, Tooltip, Button } from "@nextui-org/react";
