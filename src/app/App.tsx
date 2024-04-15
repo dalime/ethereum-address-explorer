@@ -52,6 +52,7 @@ function App() {
   const [loading] = useRecoilState(loadingState);
   const [walletInfo] = useRecoilState(walletInfoState);
   const [, setEthPrice] = useRecoilState(ethPriceState);
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
   const scrollTargetRef = useRef<HTMLDivElement | HTMLParagraphElement | null>(
     null
   );
@@ -85,9 +86,25 @@ function App() {
 
   /**
    * Scroll to the top of the main element
+   * @param delay boolean | undefined
    */
-  const scrollToTop = () => {
-    scrollTargetRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToTop = (delay?: boolean) => {
+    setTimeout(
+      () => {
+        const scrollContainer = scrollContainerRef.current;
+        const targetElement = scrollTargetRef.current;
+
+        if (scrollContainer && targetElement) {
+          // Scroll the element into view
+          targetElement.scrollIntoView();
+
+          // Adjust scroll position by 64 pixels above the element
+          const currentScrollPosition = scrollContainer.scrollTop;
+          scrollContainer.scrollTop = currentScrollPosition - 64;
+        }
+      },
+      delay ? 300 : 0
+    );
   };
 
   return (
@@ -109,6 +126,7 @@ function App() {
           position: isMobile ? "relative" : "initial",
           paddingBottom: 40,
         }}
+        ref={scrollContainerRef}
       >
         {walletInfo ? (
           <></>
@@ -151,7 +169,7 @@ function App() {
                 onSelectionChange={(key: Selection) => {
                   const keyValue = (key.valueOf() as any)["currentKey"];
                   let sessionValue = "";
-                  console.log("keyValue", keyValue);
+                  scrollToTop(true);
                   switch (keyValue) {
                     case "1":
                       sessionValue = "transactions";
@@ -167,7 +185,7 @@ function App() {
               >
                 <AccordionItem
                   key="1"
-                  aria-label="Accordion 2"
+                  aria-label="Accordian Transactions"
                   title="Transactions"
                 >
                   {walletInfo && walletInfo.transactions.length ? (
@@ -183,7 +201,7 @@ function App() {
                     </p>
                   )}
                 </AccordionItem>
-                <AccordionItem key="2" aria-label="Accordion 3" title="NFTs">
+                <AccordionItem key="2" aria-label="Accordion NFTs" title="NFTs">
                   {walletInfo.nfts.length ? (
                     <ClientNFTs nftList={walletInfo.nfts} />
                   ) : (
