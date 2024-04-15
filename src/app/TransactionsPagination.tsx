@@ -67,7 +67,7 @@ function TransactionsPagination() {
     <>
       {walletInfo.transactionsPage > 1 ||
       walletInfo.transactions.length > 20 ? (
-        <div className="flex flex-row justify-center items-center mt-10 mb-10">
+        <div className="flex flex-row justify-center items-center mb-5">
           {walletInfo.transactions &&
           walletInfo.transactionsPage > 2 &&
           !isExtraSmall ? (

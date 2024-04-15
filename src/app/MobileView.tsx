@@ -12,7 +12,6 @@ import { walletInfoState } from "@/recoil/atoms";
 import BalanceInfo from "./BalanceInfo";
 // import TransactionsTable from "./TransactionsTable";
 // import NFTs from "./NFTs";
-import TransactionsPagination from "./TransactionsPagination";
 
 // Utils
 import { scrollToTop } from "@/utils";
@@ -56,10 +55,7 @@ function MobileView() {
         );
       case "transactions":
         return walletInfo.transactions && walletInfo.transactions.length ? (
-          <>
-            <ClientTransactions transactions={walletInfo.transactions} />
-            <TransactionsPagination />
-          </>
+          <ClientTransactions transactions={walletInfo.transactions} />
         ) : (
           <p className="text-sm text-white text-center">
             This wallet has no recorded transactions
