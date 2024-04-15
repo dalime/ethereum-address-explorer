@@ -11,7 +11,6 @@ import {
   AccordionItem,
   Link,
   Selection,
-  Button,
 } from "@nextui-org/react";
 
 // Recoiil
@@ -32,9 +31,6 @@ import TransactionsPagination from "./TransactionsPagination";
 
 // Images
 import EthLogo from "../../public/eth-logo.png";
-
-// SVGs
-import { ChevronUp } from "@/assets";
 
 const ClientMobileView = dynamic(() => import("./MobileView"), {
   ssr: false,
@@ -91,17 +87,11 @@ function App() {
   const scrollToTop = (delay?: boolean) => {
     setTimeout(
       () => {
-        const scrollContainer = scrollContainerRef.current;
-        const targetElement = scrollTargetRef.current;
-
-        if (scrollContainer && targetElement) {
-          // Scroll the element into view
-          targetElement.scrollIntoView();
-
-          // Adjust scroll position by 64 pixels above the element
-          const currentScrollPosition = scrollContainer.scrollTop;
-          scrollContainer.scrollTop = currentScrollPosition - 64;
-        }
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: "smooth", // Optional: Defines the transition animation.
+        });
       },
       delay ? 300 : 0
     );
@@ -152,10 +142,7 @@ function App() {
           !isSmall ? (
             <>
               {walletInfo.balance ? (
-                <BalanceInfo
-                  scrollRef={scrollTargetRef}
-                  walletBalance={walletInfo.balance}
-                />
+                <BalanceInfo walletBalance={walletInfo.balance} />
               ) : (
                 <p
                   ref={scrollTargetRef}

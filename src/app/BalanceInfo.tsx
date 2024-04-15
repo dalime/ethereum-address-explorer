@@ -31,11 +31,10 @@ function formatEth(value: string): string {
 }
 
 interface Props {
-  scrollRef: Ref<HTMLDivElement | null>;
   walletBalance: string;
 }
 
-function BalanceInfo({ scrollRef, walletBalance }: Props): JSX.Element {
+function BalanceInfo({ walletBalance }: Props): JSX.Element {
   const [ethPrice] = useRecoilState(ethPriceState);
   const walletAddressInitial = useRecoilValue(walletAddressState); // Capture the initial state
 
@@ -47,7 +46,7 @@ function BalanceInfo({ scrollRef, walletBalance }: Props): JSX.Element {
   const ethValue = ethPrice ? walletBalanceInt * ethPrice : null;
 
   return (
-    <Card className="w-full p-4 mb-5 rounded-lg" ref={scrollRef}>
+    <Card className="w-full p-4 mb-5 rounded-lg">
       <div>
         <div
           className="flex items-center space-x-1"
