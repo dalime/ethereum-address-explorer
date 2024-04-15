@@ -11,6 +11,7 @@ import {
   AccordionItem,
   Link,
   Selection,
+  Button,
 } from "@nextui-org/react";
 
 // Recoiil
@@ -28,6 +29,7 @@ import BalanceInfo from "./BalanceInfo";
 // import NFTs from "./NFTs";
 import LoadingMessage from "./LoadingMessage";
 import TransactionsPagination from "./TransactionsPagination";
+import { ChevronUp } from "@/assets";
 
 // Images
 import EthLogo from "../../public/eth-logo.png";
@@ -96,6 +98,23 @@ function App() {
   return (
     <div className="flex flex-col min-h-screen dark text-foreground bg-background">
       {walletInfo ? <Navigation scrollToTop={() => scrollToTop()} /> : <></>}
+      {loading ? (
+        <></>
+      ) : (
+        <Button
+          color="primary"
+          style={{
+            position: "sticky",
+            top: "calc(100vh - 70px)",
+            left: "calc(100vw - 90px)",
+            cursor: "pointer",
+            zIndex: 9,
+          }}
+          onClick={() => scrollToTop()}
+        >
+          <ChevronUp />
+        </Button>
+      )}
       <main
         className={`flex flex-col items-center justify-${
           isMobile && walletInfo ? "start" : "center"
