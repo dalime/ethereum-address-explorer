@@ -98,7 +98,7 @@ function App() {
   return (
     <div className="flex flex-col min-h-screen dark text-foreground bg-background">
       {walletInfo ? <Navigation scrollToTop={() => scrollToTop()} /> : <></>}
-      {loading ? (
+      {loading || !walletInfo ? (
         <></>
       ) : (
         <Button
@@ -109,6 +109,8 @@ function App() {
             left: "calc(100vw - 90px)",
             cursor: "pointer",
             zIndex: 9,
+            width: "fit-content",
+            minWidth: "fit-content",
           }}
           onClick={() => scrollToTop()}
         >
