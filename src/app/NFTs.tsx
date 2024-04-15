@@ -228,6 +228,23 @@ function NFTs({ nftList }: Props) {
                           </span>
                         </div>
                       )}
+                      {nftMetadata.name && (
+                        <div
+                          className={
+                            nftMetadata.fiatPrice || nftMetadata.ethPrice
+                              ? "mt-3"
+                              : ""
+                          }
+                        >
+                          <span className="text-gray-400 text-sm">
+                            ENS NAME
+                          </span>
+                          <br />
+                          <span className="text-white text-md font-bold">
+                            {nftMetadata.name}
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </>
