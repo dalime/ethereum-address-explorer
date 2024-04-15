@@ -42,10 +42,8 @@ function BalanceInfo({ walletBalance }: Props): JSX.Element {
   const walletAddressRef = useRef(walletAddressInitial); // Use useRef to hold the initial value
 
   const { data, error, status } = useEnsName({
-    address: walletAddressInitial as `0x${string}`,
+    address: walletAddressRef.current as `0x${string}`,
   });
-
-  console.log("ENS DATA", data, error, status);
 
   const isSmall = useMediaQuery({ maxWidth: 640 });
   const walletBalanceInt = parseInt(walletBalance, 10);
@@ -122,7 +120,7 @@ function BalanceInfo({ walletBalance }: Props): JSX.Element {
           </Tooltip>
         </span>
       </div>
-      {data && !error ? (
+      {data && !error && status.includes("success") ? (
         <div className="mt-3">
           <div
             className="flex items-center space-x-1"
