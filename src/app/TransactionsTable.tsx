@@ -22,12 +22,8 @@ import { loadingState, walletInfoState } from "@/recoil/atoms";
 // Actions
 import { fetchAddressInfo } from "@/actions";
 
-// Components
-import TransactionRow from "./TransactionRow";
-
 // Utils
 import {
-  formatETH,
   shrinkAddress,
   formatValueToEth,
   calculateGasFeeInEth,
@@ -133,6 +129,8 @@ function TransactionsTable({ transactions }: Props) {
             //   transaction={transaction}
             //   index={index}
             // />
+            // Cannot create separate TransactionRow component because of NextUI bug
+            // "type.getCollectionNode is not a function" error when trying to put a Component as child of TableBody
             <TableRow key={`transaction-${hash}`}>
               <TableCell>
                 {walletInfo && walletInfo.transactionsPage
