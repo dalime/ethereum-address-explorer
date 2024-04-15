@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, Ref } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useMediaQuery } from "react-responsive";
 import { Card, Image, Tooltip, Button } from "@nextui-org/react";
@@ -31,10 +31,11 @@ function formatEth(value: string): string {
 }
 
 interface Props {
+  scrollRef: Ref<HTMLDivElement | null>;
   walletBalance: string;
 }
 
-function BalanceInfo({ walletBalance }: Props): JSX.Element {
+function BalanceInfo({ scrollRef, walletBalance }: Props): JSX.Element {
   const [ethPrice] = useRecoilState(ethPriceState);
   const walletAddressInitial = useRecoilValue(walletAddressState); // Capture the initial state
 
@@ -46,7 +47,7 @@ function BalanceInfo({ walletBalance }: Props): JSX.Element {
   const ethValue = ethPrice ? walletBalanceInt * ethPrice : null;
 
   return (
-    <Card className="w-full p-4 mb-5 rounded-lg">
+    <Card className="w-full p-4 mb-5 rounded-lg" ref={scrollRef}>
       <div>
         <div
           className="flex items-center space-x-1"

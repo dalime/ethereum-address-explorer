@@ -48,7 +48,7 @@ function MobileView() {
     switch (selectedTab) {
       case "overview":
         return walletInfo.balance ? (
-          <BalanceInfo walletBalance={walletInfo.balance} />
+          <BalanceInfo scrollRef={null} walletBalance={walletInfo.balance} />
         ) : (
           <p className="text-sm text-white text-center">
             Overview not available

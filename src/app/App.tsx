@@ -3,7 +3,7 @@
 // Global imports
 import dynamic from "next/dynamic";
 import React, { useEffect, useRef } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { useMediaQuery } from "react-responsive";
 import {
   Image,
@@ -11,15 +11,11 @@ import {
   AccordionItem,
   Link,
   Selection,
+  Button,
 } from "@nextui-org/react";
 
 // Recoiil
-import {
-  ethPriceState,
-  loadingState,
-  walletInfoState,
-  walletAddressState,
-} from "@/recoil/atoms";
+import { ethPriceState, loadingState, walletInfoState } from "@/recoil/atoms";
 
 // Actions
 import { fetchEthPrice } from "@/actions";
@@ -37,6 +33,9 @@ import TransactionsPagination from "./TransactionsPagination";
 // Images
 import EthLogo from "../../public/eth-logo.png";
 
+// SVGs
+import { ChevronUp } from "@/assets";
+
 const ClientMobileView = dynamic(() => import("./MobileView"), {
   ssr: false,
 });
@@ -53,8 +52,9 @@ function App() {
   const [loading] = useRecoilState(loadingState);
   const [walletInfo] = useRecoilState(walletInfoState);
   const [, setEthPrice] = useRecoilState(ethPriceState);
-  const walletAddressInitial = useRecoilValue(walletAddressState); // Capture the initial state
-  const walletAddressRef = useRef(walletAddressInitial); // Use useRef to hold the initial value
+  const scrollTargetRef = useRef<HTMLDivElement | HTMLParagraphElement | null>(
+    null
+  );
 
   const isSmall = useMediaQuery({ maxWidth: 640 });
   const isMobile = useMediaQuery({ maxWidth: 768 });
@@ -83,9 +83,16 @@ function App() {
     getAndSetEthPrice();
   }, [setEthPrice]);
 
+  /**
+   * Scroll to the top of the main element
+   */
+  const scrollToTop = () => {
+    scrollTargetRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <div className="flex flex-col min-h-screen dark text-foreground bg-background">
-      {walletInfo ? <Navigation /> : <></>}
+      {walletInfo ? <Navigation scrollToTop={() => scrollToTop()} /> : <></>}
       <main
         className={`flex flex-col items-center justify-${
           isMobile && walletInfo ? "start" : "center"
@@ -127,9 +134,15 @@ function App() {
           !isSmall ? (
             <>
               {walletInfo.balance ? (
-                <BalanceInfo walletBalance={walletInfo.balance} />
+                <BalanceInfo
+                  scrollRef={scrollTargetRef}
+                  walletBalance={walletInfo.balance}
+                />
               ) : (
-                <p className="text-sm text-white text-center">
+                <p
+                  ref={scrollTargetRef}
+                  className="text-sm text-white text-center"
+                >
                   Overview not available
                 </p>
               )}

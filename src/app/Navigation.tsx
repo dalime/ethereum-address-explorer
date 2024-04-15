@@ -23,7 +23,11 @@ import SearchInput from "./SearchInput";
 // Images
 import EthLogo from "../../public/eth-logo.png";
 
-export default function Navigation() {
+interface Props {
+  scrollToTop(): void;
+}
+
+export default function Navigation({ scrollToTop }: Props) {
   const [ethPrice] = useRecoilState(ethPriceState);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
@@ -42,7 +46,10 @@ export default function Navigation() {
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           className="sm:hidden"
         />
-        <NavbarBrand>
+        <NavbarBrand
+          style={{ cursor: "pointer" }}
+          onClick={() => scrollToTop()}
+        >
           {ethPrice && (
             <div className="flex items-center space-x-1">
               {" "}
