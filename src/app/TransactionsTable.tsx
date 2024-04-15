@@ -22,6 +22,9 @@ import { loadingState, walletInfoState } from "@/recoil/atoms";
 // Actions
 import { fetchAddressInfo } from "@/actions";
 
+// Components
+import TransactionRow from "./TransactionRow";
+
 // Utils
 import {
   formatETH,
@@ -30,6 +33,7 @@ import {
   calculateGasFeeInEth,
   capitalizeFirstLetterOfEachWord,
 } from "@/utils";
+import TransactionsPagination from "./TransactionsPagination";
 
 interface LinkBtnProps {
   children?: JSX.Element | JSX.Element[] | string;
@@ -88,7 +92,10 @@ function TransactionsTable({ transactions }: Props) {
     transactionsLength > 20 ? transactions.slice(0, 20) : transactions;
 
   return (
-    <Table style={{ marginBottom: 20 }}>
+    <Table
+      style={{ marginBottom: 20 }}
+      bottomContent={<TransactionsPagination />}
+    >
       <TableHeader>
         <TableColumn>#</TableColumn>
         <TableColumn>Transaction Hash</TableColumn>
@@ -121,6 +128,11 @@ function TransactionsTable({ transactions }: Props) {
           const finalValue = formatValueToEth(value);
 
           return (
+            // <TransactionRow
+            //   key={`transaction-${hash}`}
+            //   transaction={transaction}
+            //   index={index}
+            // />
             <TableRow key={`transaction-${hash}`}>
               <TableCell>
                 {walletInfo && walletInfo.transactionsPage

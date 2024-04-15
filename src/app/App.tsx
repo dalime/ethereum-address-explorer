@@ -28,7 +28,6 @@ import BalanceInfo from "./BalanceInfo";
 // import TransactionsTable from "./TransactionsTable";
 // import NFTs from "./NFTs";
 import LoadingMessage from "./LoadingMessage";
-import TransactionsPagination from "./TransactionsPagination";
 import { ChevronUp } from "@/assets";
 
 // Images
@@ -189,12 +188,9 @@ function App() {
                   title="Transactions"
                 >
                   {walletInfo && walletInfo.transactions.length ? (
-                    <>
-                      <ClientTransactions
-                        transactions={walletInfo.transactions}
-                      />
-                      <TransactionsPagination />
-                    </>
+                    <ClientTransactions
+                      transactions={walletInfo.transactions}
+                    />
                   ) : (
                     <p className="text-sm text-white text-center">
                       This wallet has no recorded transactions
