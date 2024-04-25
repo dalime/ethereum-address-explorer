@@ -142,6 +142,7 @@ const fetchAddressInfo = async (walletAddress: string) => {
       transactions: Array.isArray(walletTransactions) ? walletTransactions : [],
       transactionsPage: 1,
       nfts: Array.isArray(walletNFTs) ? walletNFTs : [],
+      nftsPage: 1,
     };
 
     sessionStorage.setItem("ethWalletInfo", JSON.stringify(returnObj));

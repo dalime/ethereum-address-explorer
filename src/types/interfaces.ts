@@ -26,6 +26,7 @@ export interface WalletInfo {
   transactions: Transaction[];
   transactionsPage: number;
   nfts: NFTData[];
+  nftsPage: number;
 }
 
 export interface NFTData {

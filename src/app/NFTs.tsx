@@ -10,6 +10,7 @@ import { parseNFTMetadata, formatETH, shrinkAddress } from "@/utils";
 
 // Images
 import PlaceholderImg from "../../public/placeholder-img.png";
+import NFTPagination from "./NFTPagination";
 
 interface ImageWithFallbackProps {
   src: string;
@@ -98,9 +99,10 @@ const ImageWithFallback = ({
 
 interface Props {
   nftList: NFTData[];
+  nftPage: number;
 }
 
-function NFTs({ nftList }: Props) {
+function NFTs({ nftList, nftPage }: Props) {
   /**
    * Renders view in OpenSea button
    * @param tokenAddress string
@@ -149,10 +151,14 @@ function NFTs({ nftList }: Props) {
     </Tooltip>
   );
 
+  const endIndex = nftPage * 8;
+  const begIndex = endIndex - 8;
+  const subArr = nftList.slice(begIndex, endIndex).map((nftItem) => nftItem);
+
   return (
     <div className="container mx-auto" style={{ marginTop: 20 }}>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {nftList.map((nft, index) => {
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-10">
+        {subArr.map((nft, index) => {
           const { name, metadata, token_address, token_id } = nft;
           let nftMetadata: NFTMetadata | null = null;
           if (typeof metadata === "string") {
@@ -290,6 +296,7 @@ function NFTs({ nftList }: Props) {
           );
         })}
       </div>
+      <NFTPagination />
     </div>
   );
 }
