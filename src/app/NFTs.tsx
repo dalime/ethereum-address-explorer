@@ -1,6 +1,7 @@
 // Global imports
 import React, { CSSProperties, useState } from "react";
 import { Card, Image, Button, Tooltip } from "@nextui-org/react";
+import { useMediaQuery } from "react-responsive";
 
 // Types
 import { NFTData, NFTMetadata } from "@/types";
@@ -103,6 +104,11 @@ interface Props {
 }
 
 function NFTs({ nftList, nftPage }: Props) {
+  // Media queries for pagination
+  const oneColumn = useMediaQuery({ maxWidth: 640 });
+  const twoColumns = useMediaQuery({ maxWidth: 1024 });
+  const threeColumns = useMediaQuery({ maxWidth: 1280 });
+
   /**
    * Renders view in OpenSea button
    * @param tokenAddress string
@@ -151,8 +157,11 @@ function NFTs({ nftList, nftPage }: Props) {
     </Tooltip>
   );
 
-  const endIndex = nftPage * 8;
-  const begIndex = endIndex - 8;
+  // Set page size based on how wide the screen is
+  const pageSize = oneColumn ? 3 : twoColumns ? 6 : threeColumns ? 9 : 12;
+
+  const endIndex = nftPage * pageSize;
+  const begIndex = endIndex - pageSize;
   const subArr = nftList.slice(begIndex, endIndex).map((nftItem) => nftItem);
 
   return (

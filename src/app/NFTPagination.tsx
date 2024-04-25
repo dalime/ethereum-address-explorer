@@ -10,9 +10,6 @@ import {
   loadingState,
 } from "@/recoil/atoms";
 
-// Types
-import { NFTData } from "@/types";
-
 // Assets
 import { ChevronDoubleLeft, ChevronLeft, ChevronRight } from "@/assets";
 
@@ -25,6 +22,11 @@ function NFTPagination() {
 
   const isExtraSmall = useMediaQuery({ maxWidth: 400 });
   const isSmall = useMediaQuery({ maxWidth: 500 });
+
+  // Media queries for pagination
+  const oneColumn = useMediaQuery({ maxWidth: 640 });
+  const twoColumns = useMediaQuery({ maxWidth: 1024 });
+  const threeColumns = useMediaQuery({ maxWidth: 1280 });
 
   if (!walletInfo) return <></>;
 
@@ -52,13 +54,16 @@ function NFTPagination() {
     }
   };
 
+  // Set page size based on how wide the screen is
+  const pageSize = oneColumn ? 3 : twoColumns ? 6 : threeColumns ? 9 : 12;
+
   const nftsLength = walletInfo ? walletInfo.nfts.length : 0;
   const marginStyle = { marginRight: isSmall ? 5 : 10 };
 
-  const endIndex = walletInfo ? walletInfo.nftsPage * 8 : null;
+  const endIndex = walletInfo ? walletInfo.nftsPage * pageSize : null;
 
   const maxEndIndex = endIndex ? Math.min(nftsLength - 1, endIndex) : null;
-  const begIndex = endIndex !== null ? endIndex - 8 : null;
+  const begIndex = endIndex !== null ? endIndex - pageSize : null;
 
   const subArr =
     begIndex !== null && endIndex !== null
@@ -67,7 +72,7 @@ function NFTPagination() {
 
   return (
     <>
-      {walletInfo.nftsPage > 1 || walletInfo.nfts.length > 8 ? (
+      {walletInfo.nftsPage > 1 || walletInfo.nfts.length > pageSize ? (
         <div className="flex flex-row justify-center items-center mb-5">
           {walletInfo.nfts && walletInfo.nftsPage > 2 && !isExtraSmall ? (
             <Button
@@ -108,7 +113,7 @@ function NFTPagination() {
                 maxEndIndex !== null
                   ? `${begIndex + 1} -
                     ${maxEndIndex}`
-                  : `1 - ${Math.min(nftsLength, 8)}`}
+                  : `1 - ${Math.min(nftsLength, pageSize)}`}
               </label>
             )
           ) : (
