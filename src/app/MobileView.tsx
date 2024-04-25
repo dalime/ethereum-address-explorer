@@ -66,7 +66,7 @@ function MobileView() {
         );
       case "nfts":
         return walletInfo.nfts.length ? (
-          <ClientNFTs nftList={walletInfo.nfts} />
+          <ClientNFTs nftList={walletInfo.nfts} nftPage={walletInfo.nftsPage} />
         ) : (
           <p className="text-sm text-white text-center">
             This wallet does not have any NFTs

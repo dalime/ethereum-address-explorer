@@ -199,7 +199,10 @@ function App() {
                 </AccordionItem>
                 <AccordionItem key="2" aria-label="Accordion NFTs" title="NFTs">
                   {walletInfo.nfts.length ? (
-                    <ClientNFTs nftList={walletInfo.nfts} />
+                    <ClientNFTs
+                      nftList={walletInfo.nfts}
+                      nftPage={walletInfo.nftsPage}
+                    />
                   ) : (
                     <p className="text-sm text-white text-center">
                       This wallet does not have any NFTs

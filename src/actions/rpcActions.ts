@@ -82,7 +82,7 @@ const fetchWalletTransactions = async (walletAddress: string, page?: number) => 
  * @returns NFTData[]
  */
 const fetchNFTsForWallet = async (walletAddress: string) => {
-  const url = `https://deep-index.moralis.io/api/v2.2/${walletAddress}/nft?chain=eth&format=decimal&media_items=false`; // Your Moralis server URL
+  const url = `https://deep-index.moralis.io/api/v2.2/${walletAddress}/nft?chain=eth&format=decimal&media_items=true&limit=100`; // Your Moralis server URL
 
   try {
     const response = await fetch(url, { method: 'GET', headers: {
@@ -142,6 +142,7 @@ const fetchAddressInfo = async (walletAddress: string) => {
       transactions: Array.isArray(walletTransactions) ? walletTransactions : [],
       transactionsPage: 1,
       nfts: Array.isArray(walletNFTs) ? walletNFTs : [],
+      nftsPage: 1,
     };
 
     sessionStorage.setItem("ethWalletInfo", JSON.stringify(returnObj));

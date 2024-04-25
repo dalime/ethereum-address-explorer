@@ -1,6 +1,7 @@
 // Global imports
 import React, { CSSProperties, useState } from "react";
 import { Card, Image, Button, Tooltip } from "@nextui-org/react";
+import { useMediaQuery } from "react-responsive";
 
 // Types
 import { NFTData, NFTMetadata } from "@/types";
@@ -10,6 +11,7 @@ import { parseNFTMetadata, formatETH, shrinkAddress } from "@/utils";
 
 // Images
 import PlaceholderImg from "../../public/placeholder-img.png";
+import NFTPagination from "./NFTPagination";
 
 interface ImageWithFallbackProps {
   src: string;
@@ -98,9 +100,15 @@ const ImageWithFallback = ({
 
 interface Props {
   nftList: NFTData[];
+  nftPage: number;
 }
 
-function NFTs({ nftList }: Props) {
+function NFTs({ nftList, nftPage }: Props) {
+  // Media queries for pagination
+  const oneColumn = useMediaQuery({ maxWidth: 640 });
+  const twoColumns = useMediaQuery({ maxWidth: 1024 });
+  const threeColumns = useMediaQuery({ maxWidth: 1280 });
+
   /**
    * Renders view in OpenSea button
    * @param tokenAddress string
@@ -149,10 +157,17 @@ function NFTs({ nftList }: Props) {
     </Tooltip>
   );
 
+  // Set page size based on how wide the screen is
+  const pageSize = oneColumn ? 3 : twoColumns ? 6 : threeColumns ? 9 : 12;
+
+  const endIndex = nftPage * pageSize;
+  const begIndex = endIndex - pageSize;
+  const subArr = nftList.slice(begIndex, endIndex).map((nftItem) => nftItem);
+
   return (
     <div className="container mx-auto" style={{ marginTop: 20 }}>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {nftList.map((nft, index) => {
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-10">
+        {subArr.map((nft, index) => {
           const { name, metadata, token_address, token_id } = nft;
           let nftMetadata: NFTMetadata | null = null;
           if (typeof metadata === "string") {
@@ -290,6 +305,7 @@ function NFTs({ nftList }: Props) {
           );
         })}
       </div>
+      <NFTPagination />
     </div>
   );
 }
