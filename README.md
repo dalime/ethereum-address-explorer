@@ -8,7 +8,7 @@ It mocks [Etherscan](https://etherscan.io) for transactions and [OpenSea](https:
 
 It is bootstrapped with [Next.js](https://nextjs.org/) and [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-The project is deployed [here](https://ethereum-address-explorer-dalime.vercel.app/).
+The project is deployed on Vercel at [https://ethereum-address-explorer-bay.vercel.app/](https://ethereum-address-explorer-bay.vercel.app/).
 
 ## Getting Started
 
